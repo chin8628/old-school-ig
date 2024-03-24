@@ -16,7 +16,7 @@ export const PhotoModal = (props: PhotoModalProps) => {
           alt="Photo"
           width={0}
           height={0}
-          sizes="100vw"
+          sizes="1080px"
           className="w-full max-h-[90vh] max-w-[90vw]"
         />
       </div>

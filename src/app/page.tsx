@@ -4,6 +4,7 @@ import { PhotoModal } from "./component/PhotoModal";
 import { useState } from "react";
 import { Profile } from "./component/Profile";
 import { PhotoItem } from "./component/PhotoItem";
+import { GridUploadButton } from "./component/UploadItem";
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,7 @@ export default function Home() {
             <Profile />
           </div>
           <div className="grid grid-cols-3 gap-2 w-full mx-auto">
+            <GridUploadButton />
             {[...Array(7)].map((_, i) => (
               <PhotoItem key={i} src={`/images/1.jpg`} openModal={openModal} priority={i < 3} />
             ))}

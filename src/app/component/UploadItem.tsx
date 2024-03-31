@@ -16,6 +16,7 @@ export const GridUploadButton: React.FC<GridUploadButtonProps> = () => {
   return (
     <form ref={formRef} action={uploadPhotoAction}>
       <button
+        type="button"
         onClick={handleUpload}
         className="w-full h-full max-w-300px max-h-300px relative border border-gray-300 flex items-center justify-center"
       >
@@ -27,7 +28,11 @@ export const GridUploadButton: React.FC<GridUploadButtonProps> = () => {
         accept="image/jpeg"
         name="photo"
         ref={fileInputRef}
-        onChange={(e) => formRef.current!.requestSubmit()}
+        onChange={(e) => {
+          if (e.target.files?.length === 1) {
+            formRef.current!.requestSubmit();
+          }
+        }}
       />
     </form>
   );

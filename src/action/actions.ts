@@ -1,5 +1,5 @@
 "use server";
-import { uploadPhoto } from "@/service/gallery/upload";
+import { saveFileName, uploadPhoto } from "@/service/gallery/upload";
 import { z } from "zod";
 
 export const uploadPhotoAction = async (f: FormData) => {
@@ -17,7 +17,8 @@ export const uploadPhotoAction = async (f: FormData) => {
     };
   }
 
-  uploadPhoto(validatedFields.data.photo);
+  const remoteFileName = await uploadPhoto(validatedFields.data.photo);
+  saveFileName(remoteFileName);
 
   return {};
 };

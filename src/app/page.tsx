@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { PhotoModal } from "./component/PhotoModal";
 import { useState } from "react";
 import { Profile } from "./component/Profile";

@@ -1,4 +1,4 @@
-import * as Minio from 'minio';
+import * as Minio from "minio";
 
 // Singleton instance of Minio client
 let minioClient: Minio.Client | null = null;
@@ -20,15 +20,25 @@ function initializeMinioClient(): Minio.Client {
 // Function to upload a file to Minio
 async function uploadFileToMinio(file: File, fileName: string): Promise<void> {
   const client = initializeMinioClient();
-
+  const metaData = {
+    "Content-Type": file.type,
+  };
   return new Promise(async (resolve, reject) => {
-    client.putObject(process.env.MINIO_BUCKET!, fileName, Buffer.from(await file.arrayBuffer()), (error: Error | null) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
+    client.putObject(
+      process.env.MINIO_BUCKET!,
+      fileName,
+      Buffer.from(await file.arrayBuffer()),
+      file.size,
+      metaData,
+      (error: Error | null) => {
+        if (error) {
+          console.debug("Error uploading file to Minio:", error);
+          reject(error);
+        } else {
+          resolve();
+        }
       }
-    });
+    );
   });
 }
 

@@ -1,14 +1,26 @@
 "use client";
 import { PhotoModal } from "./component/PhotoModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Profile } from "./component/Profile";
 import { PhotoItem } from "./component/PhotoItem";
 import { GridUploadButton } from "./component/UploadItem";
+import { PhotoInfo, getAllPhotoNames } from "@/service/gallery/photoName";
 
 export default function Home() {
-  const [showModal, setShowModal] = useState(false);
-  const openModal = () => setShowModal(true);
-  const closeModal = () => setShowModal(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoInfo | null>(null);
+
+  const [photos, setPhotos] = useState<PhotoInfo[]>([]);
+  const [isLoadingPhotos, setIsLoadingPhotos] = useState(true);
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      setIsLoadingPhotos(true);
+      const photoRecords = await getAllPhotoNames();
+      setPhotos(photoRecords);
+      setIsLoadingPhotos(false);
+    };
+
+    fetchPhotos();
+  }, []);
 
   return (
     <div>
@@ -19,13 +31,18 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-3 gap-2 w-full mx-auto">
             <GridUploadButton />
-            {[...Array(7)].map((_, i) => (
-              <PhotoItem key={i} src={`/images/1.jpg`} openModal={openModal} priority={i < 3} />
+            {photos.map((photo, i) => (
+              <PhotoItem
+                key={photo.id}
+                photo={photo}
+                openModal={(photo: PhotoInfo) => setSelectedPhoto(photo)}
+                priority={i < 3}
+              />
             ))}
           </div>
         </div>
       </main>
-      {showModal && <PhotoModal close={closeModal} />}
+      {selectedPhoto !== null && <PhotoModal photo={selectedPhoto} close={() => setSelectedPhoto(null)} />}
     </div>
   );
 }

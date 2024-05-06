@@ -1,12 +1,17 @@
 "use server";
-import { getSqliteInstance } from '@/repository/db';
+import { getSqliteInstance } from "@/repository/db";
 
-export const getAllPhotoNames = async (): Promise<{ id: string, photoUrl: string }[]> => {
+export type PhotoInfo = {
+  id: string;
+  photoUrl: string;
+};
+
+export const getAllPhotoNames = async (): Promise<PhotoInfo[]> => {
   const db = await getSqliteInstance();
-  const result = (await db.all('SELECT id, photo_name FROM photos')).map((photo) => ({
+  const result = (await db.all("SELECT id, file_name FROM photos ORDER BY id DESC")).map((photo) => ({
     id: photo.id as string,
-    photoUrl: `/images/${photo.photo_name}`
+    photoUrl: `${process.env.MINIO_PHOTO_PATH}/${photo.file_name}`,
   }));
 
   return result;
-}
+};

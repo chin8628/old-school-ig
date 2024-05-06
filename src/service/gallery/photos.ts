@@ -6,7 +6,7 @@ export type PhotoInfo = {
   photoUrl: string;
 };
 
-export const getAllPhotoNames = async (): Promise<PhotoInfo[]> => {
+export const getAllPhotos = async (): Promise<PhotoInfo[]> => {
   const db = await getSqliteInstance();
   const result = (await db.all("SELECT id, file_name FROM photos ORDER BY id DESC")).map((photo) => ({
     id: photo.id as string,

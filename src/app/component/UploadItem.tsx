@@ -1,10 +1,13 @@
-import { PlusIcon } from "@heroicons/react/24/outline";
 import { uploadPhotoAction } from "@/action/actions";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { UploadButton } from "./UploadButton";
+import { useFormState } from "react-dom";
 
-type GridUploadButtonProps = {};
+type GridUploadButtonProps = {
+  onUploadSuccess: () => void;
+};
 
-export const GridUploadButton: React.FC<GridUploadButtonProps> = () => {
+export const GridUploadButton = (props: GridUploadButtonProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -12,17 +15,17 @@ export const GridUploadButton: React.FC<GridUploadButtonProps> = () => {
     fileInputRef.current!.click();
   };
 
+  const [state, formAction] = useFormState(uploadPhotoAction, null);
+
+  useEffect(() => {
+    if (state !== null && Object.keys(state.errors).length === 0) {
+      props.onUploadSuccess();
+    }
+  }, [state]);
+
   return (
-    <form ref={formRef} action={uploadPhotoAction}>
-      <button
-        type="button"
-        onClick={handleUpload}
-        className="w-full h-full max-w-300px max-h-300px relative border border-gray-300 flex items-center justify-center"
-      >
-        <div className="w-[300px] flex items-center justify-center aspect-square">
-          <PlusIcon className="w-24 h-24 text-gray-300" />
-        </div>
-      </button>
+    <form ref={formRef} action={formAction}>
+      <UploadButton handleUpload={handleUpload} />
       <input
         hidden
         type="file"

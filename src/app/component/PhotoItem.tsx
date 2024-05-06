@@ -1,4 +1,4 @@
-import { PhotoInfo } from "@/service/gallery/photoName";
+import { PhotoInfo } from "@/service/gallery/photos";
 import Image from "next/image";
 
 type PhotoItemProps = {

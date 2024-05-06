@@ -4,22 +4,22 @@ import { useEffect, useState } from "react";
 import { Profile } from "./component/Profile";
 import { PhotoItem } from "./component/PhotoItem";
 import { GridUploadButton } from "./component/UploadItem";
-import { PhotoInfo, getAllPhotoNames } from "@/service/gallery/photoName";
+import { PhotoInfo, getAllPhotos } from "@/service/gallery/photos";
 
 export default function Home() {
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoInfo | null>(null);
 
   const [photos, setPhotos] = useState<PhotoInfo[]>([]);
   const [isLoadingPhotos, setIsLoadingPhotos] = useState(true);
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      setIsLoadingPhotos(true);
-      const photoRecords = await getAllPhotoNames();
-      setPhotos(photoRecords);
-      setIsLoadingPhotos(false);
-    };
 
-    fetchPhotos();
+  const getPhotos = async () => {
+    setIsLoadingPhotos(true);
+    const photoRecords = await getAllPhotos();
+    setPhotos(photoRecords);
+    setIsLoadingPhotos(false);
+  };
+  useEffect(() => {
+    getPhotos();
   }, []);
 
   return (
@@ -29,8 +29,8 @@ export default function Home() {
           <div className="p-4 sm:p-8">
             <Profile />
           </div>
-          <div className="grid grid-cols-3 gap-2 w-full mx-auto">
-            <GridUploadButton />
+          <div className="grid grid-cols-3 gap-1 w-full mx-auto">
+            <GridUploadButton onUploadSuccess={getPhotos} />
             {photos.map((photo, i) => (
               <PhotoItem
                 key={photo.id}

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { PhotoInfo } from "@/service/gallery/photoName";
+import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
+import { PhotoInfo } from "@/service/gallery/photos";
 
 type PhotoModalProps = {
   photo: PhotoInfo;
@@ -27,10 +27,10 @@ export const PhotoModal = (props: PhotoModalProps) => {
           className="w-full max-h-[90vh] max-w-[90vw]"
         />
       </div>
-      <div className="w-8 h-8 m-4 flex items-center justify-center text-white">
+      <div className="h-8 m-4 flex items-center justify-center text-white">
         <a href={props.photo.photoUrl} target="_blank" className="flex items-center space-x-2">
-          <ArrowDownTrayIcon className="w-4 h-4" />
-          <span>Download</span>
+          <ArrowsPointingOutIcon className="w-4 h-4" />
+          <span>Original</span>
         </a>
       </div>
     </div>

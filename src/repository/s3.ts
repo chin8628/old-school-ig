@@ -32,7 +32,6 @@ async function uploadFileToMinio(file: File, fileName: string): Promise<void> {
       metaData,
       (error: Error | null) => {
         if (error) {
-          console.debug("Error uploading file to Minio:", error);
           reject(error);
         } else {
           resolve();

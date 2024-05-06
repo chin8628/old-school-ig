@@ -5,12 +5,15 @@ import { Profile } from "./component/Profile";
 import { PhotoItem } from "./component/PhotoItem";
 import { GridUploadButton } from "./component/UploadItem";
 import { PhotoInfo, getAllPhotos } from "@/service/gallery/photos";
+import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 export default function Home() {
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoInfo | null>(null);
 
   const [photos, setPhotos] = useState<PhotoInfo[]>([]);
   const [isLoadingPhotos, setIsLoadingPhotos] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
 
   const getPhotos = async () => {
     setIsLoadingPhotos(true);
@@ -18,8 +21,16 @@ export default function Home() {
     setPhotos(photoRecords);
     setIsLoadingPhotos(false);
   };
+
+  const fetchSession = async () => {
+    const session = await getSession();
+    console.log("🚀 ~ fetchSession ~ session:", session);
+    setSession(session);
+  };
+
   useEffect(() => {
     getPhotos();
+    fetchSession();
   }, []);
 
   return (
@@ -30,7 +41,7 @@ export default function Home() {
             <Profile />
           </div>
           <div className="grid grid-cols-3 gap-1 w-full mx-auto">
-            <GridUploadButton onUploadSuccess={getPhotos} />
+            {session && <GridUploadButton onUploadSuccess={getPhotos} />}
             {photos.map((photo, i) => (
               <PhotoItem
                 key={photo.id}

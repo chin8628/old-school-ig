@@ -24,7 +24,6 @@ export default function Home() {
 
   const fetchSession = async () => {
     const session = await getSession();
-    console.log("🚀 ~ fetchSession ~ session:", session);
     setSession(session);
   };
 

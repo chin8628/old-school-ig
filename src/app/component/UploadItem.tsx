@@ -19,7 +19,9 @@ export const GridUploadButton: React.FC<GridUploadButtonProps> = () => {
         onClick={handleUpload}
         className="w-full h-full max-w-300px max-h-300px relative border border-gray-300 flex items-center justify-center"
       >
-        <PlusIcon className="w-24 h-24 text-gray-300" />
+        <div className="w-[300px] flex items-center justify-center aspect-square">
+          <PlusIcon className="w-24 h-24 text-gray-300" />
+        </div>
       </button>
       <input
         hidden

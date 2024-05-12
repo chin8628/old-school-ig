@@ -36,11 +36,11 @@ export default function Home() {
     <div>
       <main className="flex min-h-screen flex-col items-center p-0 py-8 sm:py-16 sm:px-[20vw]">
         <div className="max-w-[920px]">
-          <div className="p-4 sm:p-8">
+          <div className="p-4 sm:p-8 flex flex-row justify-between items-center">
             <Profile />
+            {session && <GridUploadButton onUploadSuccess={getPhotos} />}
           </div>
           <div className="grid grid-cols-3 gap-1 w-full mx-auto">
-            {session && <GridUploadButton onUploadSuccess={getPhotos} />}
             {photos.map((photo, i) => (
               <PhotoItem
                 key={photo.id}

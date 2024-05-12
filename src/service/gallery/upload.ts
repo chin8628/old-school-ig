@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import ExifReader from "exifreader";
 import { uploadFileToMinio } from "../../repository/s3";
 
-type ExifData = {
+export type ExifData = {
   iso: string | null;
   shutterSpeed: string | null;
   fNumber: string | null;

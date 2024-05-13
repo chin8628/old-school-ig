@@ -1,13 +1,9 @@
+"use client";
 import { uploadPhotoAction } from "@/action/actions";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { UploadButton } from "./UploadButton";
-import { useFormState } from "react-dom";
 
-type GridUploadButtonProps = {
-  onUploadSuccess: () => void;
-};
-
-export const GridUploadButton = (props: GridUploadButtonProps) => {
+export const GridUploadButton = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -15,16 +11,8 @@ export const GridUploadButton = (props: GridUploadButtonProps) => {
     fileInputRef.current!.click();
   };
 
-  const [state, formAction] = useFormState(uploadPhotoAction, null);
-
-  useEffect(() => {
-    if (state !== null && Object.keys(state.errors).length === 0) {
-      props.onUploadSuccess();
-    }
-  }, [state]);
-
   return (
-    <form ref={formRef} action={formAction}>
+    <form ref={formRef} action={uploadPhotoAction}>
       <UploadButton handleUpload={handleUpload} />
       <input
         hidden

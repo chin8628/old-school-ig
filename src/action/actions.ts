@@ -2,7 +2,7 @@
 import { uploadPhoto } from "@/service/gallery/upload";
 import { z } from "zod";
 
-export const uploadPhotoAction = async (currentState: Record<string, unknown> | null, f: FormData) => {
+export const uploadPhotoAction = async (f: FormData) => {
   const schema = z.object({
     photo: z.instanceof(File),
   });

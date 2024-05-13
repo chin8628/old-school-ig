@@ -55,10 +55,11 @@ export async function savePhotoInfo(fileName: string, exif: ExifData): Promise<v
     db.run(
       `
         INSERT INTO 
-        photos (file_name, iso, shutter_speed, f_number, focal_length, make, model, lens_model, create_date, image_height, image_width)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        photos (file_name, created_at, iso, shutter_speed, f_number, focal_length, make, model, lens_model, create_date, image_height, image_width)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       fileName,
+      new Date().toISOString(),
       exif.iso,
       exif.shutterSpeed,
       exif.fNumber,

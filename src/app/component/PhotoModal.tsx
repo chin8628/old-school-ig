@@ -1,9 +1,8 @@
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { PhotoInfo } from "@/service/gallery/photos";
 import { ExifData } from "@/service/gallery/upload";
-import ContentLoader from "react-content-loader";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import React, { useEffect } from "react";
 
 type PhotoModalProps = {
   photo: PhotoInfo;
@@ -16,9 +15,7 @@ const getCameraModelTextIfExist = (make: string | null, model: string | null) =>
 const getLensModelTextIfExist = (lensModel: string | null) => (lensModel ? `${lensModel}` : "");
 const getFocalLengthTextIfExist = (focalLength: string | null) => (focalLength ? `${focalLength} mm` : "");
 const getShutterSpeedTextIfExist = (shutterSpeed: string | null) => (shutterSpeed ? `${shutterSpeed} sec` : "");
-const getFNumberTextIfExist = (fNumber: string | null) => (fNumber ? `f/${fNumber}` : "");
-const getCaptureDateTextIfExist = (createDate: string | null) =>
-  createDate ? new Date(createDate).toLocaleString("en-US", { dateStyle: "medium" }) : "";
+const getFNumberTextIfExist = (fNumber: string | null) => fNumber || "";
 
 const getShootingSettingsText = (exif: ExifData) =>
   [
@@ -66,7 +63,11 @@ export const PhotoModal = (props: PhotoModalProps) => {
         >
           <div>
             <p className="text-xs text-neutral-600">
-              {new Date(props.photo.createdAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}
+              {new Date(props.photo.createdAt).toLocaleString("en-US", {
+                dateStyle: "medium",
+                timeStyle: "short",
+                hour12: false,
+              })}
             </p>
           </div>
 
@@ -74,7 +75,11 @@ export const PhotoModal = (props: PhotoModalProps) => {
             <p className="text-sm text-neutral-600">
               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro quam repudiandae ab est. Neque voluptatem
               facere itaque nobis aliquid minima asperiores quod sapiente commodi, officiis magni id perferendis, sed
-              praesentium!
+              praesentium! ฮีโร่ช็อครีพอร์ท อัลไซเมอร์ แมคเคอเรลออร์เดอร์ สะกอมโอเพ่นธุหร่ำแฟ็กซ์เอ๋
+              เอ๋รามเทพเกรย์วโรกาสเอสเปรสโซ สตาร์เยนมอยส์เจอไรเซอร์โจ๋ซูเอี๋ย แมชชีนเทรนด์
+              สต๊อกเซ็กซ์มอคคากรอบรูปพุทธภูมิ มาร์ชก๋ากั่นอาข่าโหงวเฮ้ง รูบิคครัวซองต์สัมนาออทิสติกเวิร์ค
+              พรีเมียมแชมเปี้ยนคอนแทคเกรย์ โซลาร์ตนเอง กาญจนาภิเษกรวมมิตรพาสเจอร์ไรส์ ละติน สจ๊วตมาร์ก
+              ราสเบอร์รีราชานุญาตสเต็ป
             </p>
           </div>
           <div className="h-px w-full my-4 bg-gray-300" />

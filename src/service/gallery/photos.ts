@@ -52,3 +52,9 @@ export const getAllPhotos = async (): Promise<PhotoInfo[]> => {
 
   return result;
 };
+
+export const getTotalNumberOfPhotos = async (): Promise<number> => {
+  const db = await getSqliteInstance();
+  const result = await db.get(`SELECT COUNT(*) as count FROM photos`);
+  return result.count;
+};

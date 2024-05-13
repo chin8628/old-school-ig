@@ -1,8 +1,7 @@
-import React from "react";
+"use server";
+import { getTotalNumberOfPhotos } from "@/service/gallery/photos";
 
-type ProfileProps = {};
-
-export const Profile: React.FC<ProfileProps> = () => {
+export const Profile = async () => {
   return (
     <div className="flex items-center">
       <div className="w-16 h-16 rounded-full overflow-hidden">
@@ -11,7 +10,7 @@ export const Profile: React.FC<ProfileProps> = () => {
       <div className="ml-4">
         <h1 className="text-xl font-bold">Boonyarith P.</h1>
         <p className="text-gray-500">Software developer, home cooking.</p>
-        <p className="text-gray-500">225 photos</p>
+        <p className="text-gray-500">{await getTotalNumberOfPhotos()} photos</p>
       </div>
     </div>
   );

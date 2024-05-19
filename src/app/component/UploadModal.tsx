@@ -6,9 +6,9 @@ export const UploadModal = (props: { previewUrl: string; close: () => void }) =>
 
   return (
     <ModalContainer close={props.close}>
-      <div className="flex flex-col md:flex-row justify-center items-center w-full h-full p-4 max-h-full text-sm">
+      <div className="flex flex-col md:flex-row items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto text-sm">
         <div
-          className="rounded shadow-sm flex flex-col w-full md:max-w-[60vw] h-auto bg-gray-600 bg-opacity-80 p-4 items-center justify-center drop-shadow-sm relative"
+          className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm p-2 md:p-8 bg-white"
           onClick={stopPropagation}
         >
           <Image
@@ -31,6 +31,7 @@ export const UploadModal = (props: { previewUrl: string; close: () => void }) =>
             <textarea
               className="w-full outline-none resize-none appearance-none"
               placeholder="What's a story behind it?"
+              name="story"
               autoFocus
             ></textarea>
           </div>

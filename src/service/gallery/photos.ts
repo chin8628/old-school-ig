@@ -7,6 +7,7 @@ export type PhotoInfo = {
   photoUrl: string;
   createdAt: string;
   exif: ExifData;
+  story: string;
 };
 
 export const getAllPhotos = async (): Promise<PhotoInfo[]> => {
@@ -17,6 +18,7 @@ export const getAllPhotos = async (): Promise<PhotoInfo[]> => {
         SELECT 
           id, 
           file_name, 
+          story,
           iso, 
           shutter_speed, 
           f_number, 
@@ -35,6 +37,7 @@ export const getAllPhotos = async (): Promise<PhotoInfo[]> => {
   ).map((photo) => ({
     id: photo.id as string,
     photoUrl: `${process.env.MINIO_PHOTO_PATH}/${photo.file_name}`,
+    story: photo.story,
     createdAt: photo.created_at,
     exif: {
       iso: photo.iso,

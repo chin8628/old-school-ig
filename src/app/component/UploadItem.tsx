@@ -13,6 +13,10 @@ export const GridUploadButton = () => {
     fileInputRef.current!.click();
   };
 
+  const handleSubmit = () => {
+    setPreviewUrl(null);
+  }
+
   const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length === 1) {
       const objectUrl = URL.createObjectURL(e.target.files[0]);
@@ -22,21 +26,21 @@ export const GridUploadButton = () => {
 
   return (
     <>
-      <form ref={formRef} action={uploadPhotoAction}>
+      <form ref={formRef} action={uploadPhotoAction} onSubmit={handleSubmit}>
         <UploadButton handleUpload={handleUpload} />
         <input hidden type="file" accept="image/jpeg" name="photo" ref={fileInputRef} onChange={onUpload} />
+        {previewUrl && (
+          <UploadModal
+            close={() => {
+              if (confirm("Discard? If you leave, your edits won't be saved.")) {
+                setPreviewUrl(null);
+                URL.revokeObjectURL(previewUrl);
+              }
+            }}
+            previewUrl={previewUrl}
+          />
+        )}
       </form>
-      {previewUrl && (
-        <UploadModal
-          close={() => {
-            if (confirm("Discard? If you leave, your edits won't be saved.")) {
-              setPreviewUrl(null);
-              URL.revokeObjectURL(previewUrl);
-            }
-          }}
-          previewUrl={previewUrl}
-        />
-      )}
     </>
   );
 };

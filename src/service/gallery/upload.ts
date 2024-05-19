@@ -32,14 +32,14 @@ const extractExif = (fileBuffer: Buffer): ExifData => {
   };
 };
 
-export async function uploadPhoto(file: File): Promise<string> {
+export async function uploadPhoto(file: File, story: string): Promise<string> {
   try {
     const fileName = `${uuidv4()}.jpg`;
     const fileBuffer = Buffer.from(await file.arrayBuffer());
     const exif = extractExif(fileBuffer);
 
     await uploadFileToMinio(fileBuffer, `/upload/photo/${fileName}`);
-    await savePhotoInfo(fileName, exif);
+    await savePhotoInfo(fileName, exif, story);
 
     return fileName;
   } catch (error) {
@@ -49,16 +49,17 @@ export async function uploadPhoto(file: File): Promise<string> {
   }
 }
 
-export async function savePhotoInfo(fileName: string, exif: ExifData): Promise<void> {
+export async function savePhotoInfo(fileName: string, exif: ExifData, story: string = ""): Promise<void> {
   const db = await getSqliteInstance();
   try {
     db.run(
       `
         INSERT INTO 
-        photos (file_name, created_at, iso, shutter_speed, f_number, focal_length, make, model, lens_model, create_date, image_height, image_width)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        photos (file_name, story, created_at, iso, shutter_speed, f_number, focal_length, make, model, lens_model, create_date, image_height, image_width)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       fileName,
+      story,
       new Date().toISOString(),
       exif.iso,
       exif.shutterSpeed,
@@ -72,7 +73,6 @@ export async function savePhotoInfo(fileName: string, exif: ExifData): Promise<v
       exif.imageWidth
     );
   } catch (error) {
-    // Handle any errors that occur during the saving process
     console.error("Error saving file name:", error);
     throw error;
   }

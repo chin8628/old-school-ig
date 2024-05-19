@@ -5,10 +5,12 @@ import { z } from "zod";
 export const uploadPhotoAction = async (f: FormData) => {
   const schema = z.object({
     photo: z.instanceof(File),
+    story: z.string().optional().default(""),
   });
 
   const validatedFields = schema.safeParse({
     photo: f.get("photo"),
+    story: f.get("story"),
   });
 
   if (!validatedFields.success) {
@@ -17,7 +19,7 @@ export const uploadPhotoAction = async (f: FormData) => {
     };
   }
 
-  await uploadPhoto(validatedFields.data.photo);
+  await uploadPhoto(validatedFields.data.photo, validatedFields.data.story);
 
   return {
     errors: {},

@@ -60,17 +60,15 @@ export const PhotoModal = (props: PhotoModalProps) => {
             </p>
           </div>
 
-          <div className="mt-2 flex-grow overflow-y-auto no-scrollbar">
-            <p className="text-sm text-neutral-600">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro quam repudiandae ab est. Neque voluptatem
-              facere itaque nobis aliquid minima asperiores quod sapiente commodi, officiis magni id perferendis, sed
-              praesentium! ฮีโร่ช็อครีพอร์ท อัลไซเมอร์ แมคเคอเรลออร์เดอร์ สะกอมโอเพ่นธุหร่ำแฟ็กซ์เอ๋
-              เอ๋รามเทพเกรย์วโรกาสเอสเปรสโซ สตาร์เยนมอยส์เจอไรเซอร์โจ๋ซูเอี๋ย แมชชีนเทรนด์
-              สต๊อกเซ็กซ์มอคคากรอบรูปพุทธภูมิ มาร์ชก๋ากั่นอาข่าโหงวเฮ้ง รูบิคครัวซองต์สัมนาออทิสติกเวิร์ค
-              พรีเมียมแชมเปี้ยนคอนแทคเกรย์ โซลาร์ตนเอง กาญจนาภิเษกรวมมิตรพาสเจอร์ไรส์ ละติน สจ๊วตมาร์ก
-              ราสเบอร์รีราชานุญาตสเต็ป
-            </p>
-          </div>
+          {props.photo.story ? (
+            <div className="mt-2 flex-grow overflow-y-auto no-scrollbar">
+              <p className="text-sm text-neutral-600">{props.photo.story || ""}</p>
+            </div>
+          ) : (
+            <div className="mt-2 flex justify-center items-center flex-grow">
+              <p className="text-sm text-neutral-400 align-center">No story</p>
+            </div>
+          )}
           <div className="h-px w-full my-4 bg-gray-300" />
 
           <div className="text-xs text-neutral-600">

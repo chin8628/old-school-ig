@@ -1,8 +1,7 @@
+import { ModalContainer } from "@/app/component/ModalContainer";
 import { PhotoInfo } from "@/service/gallery/photos";
 import { ExifData } from "@/service/gallery/upload";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import React, { useEffect } from "react";
 
 type PhotoModalProps = {
   photo: PhotoInfo;
@@ -30,23 +29,13 @@ const getShootingSettingsText = (exif: ExifData) =>
 export const PhotoModal = (props: PhotoModalProps) => {
   const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, []);
-
   return (
-    <div
-      className="fixed flex-col inset-0 flex justify-center items-center bg-black bg-opacity-80 backdrop-blur-sm z-50"
-      onClick={props.close}
-    >
-      <div className="fixed top-2 right-2 z-10">
-        <XMarkIcon className="h-6 w-6 text-white cursor-pointer" onClick={props.close} />
-      </div>
-      <div className="flex flex-col md:flex-row items-center p-4 max-w-full overflow-scroll md:overflow-auto">
-        <div className="flex flex-col items-center justify-center drop-shadow-sm relative" onClick={stopPropagation}>
+    <ModalContainer close={props.close}>
+      <div className="flex flex-col md:flex-row items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto">
+        <div
+          className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm p-2 md:p-8 bg-white"
+          onClick={stopPropagation}
+        >
           <Image
             src={props.photo.photoUrl}
             alt="Photo"
@@ -54,11 +43,11 @@ export const PhotoModal = (props: PhotoModalProps) => {
             height={0}
             quality={90}
             sizes="1920px"
-            className="w-full md:max-h-[90vh] md:max-w-[90vw]"
+            className="w-auto h-auto max-w-full max-h-full shadow-[0_0_60px_0_rgba(255,255,255,0.2)]"
           />
         </div>
         <div
-          className="bg-white drop-shadow-sm p-4 mt-3 md:mt-0 md:ml-3 w-full md:max-w-[300px] md:aspect-[3/4]"
+          className="bg-white drop-shadow-sm p-4 mt-3 md:mt-0 md:ml-3 w-full h-full max-h-[50vh] md:max-w-[300px] md:aspect-[3/4] flex flex-col"
           onClick={stopPropagation}
         >
           <div>
@@ -71,7 +60,7 @@ export const PhotoModal = (props: PhotoModalProps) => {
             </p>
           </div>
 
-          <div className="mt-2">
+          <div className="mt-2 flex-grow overflow-y-auto no-scrollbar">
             <p className="text-sm text-neutral-600">
               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro quam repudiandae ab est. Neque voluptatem
               facere itaque nobis aliquid minima asperiores quod sapiente commodi, officiis magni id perferendis, sed
@@ -101,6 +90,6 @@ export const PhotoModal = (props: PhotoModalProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </ModalContainer>
   );
 };

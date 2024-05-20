@@ -1,7 +1,14 @@
 import { ModalContainer } from "@/app/component/ModalContainer";
 import Image from "next/image";
+import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 
-export const UploadModal = (props: { previewUrl: string; close: () => void }) => {
+type UploadModalProps = {
+  previewUrl: string;
+  close: () => void;
+  uploadCompleted: boolean;
+};
+
+export const UploadModal = (props: UploadModalProps) => {
   const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
   return (
@@ -23,6 +30,13 @@ export const UploadModal = (props: { previewUrl: string; close: () => void }) =>
           className="bg-white drop-shadow-sm mt-3 md:mt-0 md:ml-3 w-full h-full max-h-[20vh] md:max-w-[300px] md:aspect-[3/4]"
           onClick={stopPropagation}
         >
+          {/* Need loading indicator while uploading a photo */}
+          {props.uploadCompleted && (
+            <div className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-white bg-opacity-50 backdrop-blur-sm">
+              <CheckBadgeIcon className="h-14 text-orange-400" />
+              <p className="mt-4">You photo has been shared.</p>
+            </div>
+          )}
           <div className="w-full h-10 flex flex-row justify-between items-center p-4 border-b">
             <h2 className="font-medium">New photo</h2>
             <button className="text-blue-500 hover:text-blue-800">Share</button>
@@ -33,6 +47,7 @@ export const UploadModal = (props: { previewUrl: string; close: () => void }) =>
               placeholder="What's a story behind it?"
               name="story"
               autoFocus
+              disabled={props.uploadCompleted}
             ></textarea>
           </div>
         </div>

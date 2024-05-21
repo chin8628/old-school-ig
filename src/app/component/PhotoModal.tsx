@@ -31,7 +31,7 @@ export const PhotoModal = (props: PhotoModalProps) => {
 
   return (
     <ModalContainer close={props.close}>
-      <div className="flex flex-col md:flex-row items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto">
+      <div className="flex flex-col md:flex-row max-w-[2048px] items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto">
         <div
           className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm p-2 md:p-8 bg-white"
           onClick={stopPropagation}
@@ -41,8 +41,7 @@ export const PhotoModal = (props: PhotoModalProps) => {
             alt="Photo"
             width={0}
             height={0}
-            quality={90}
-            sizes="1920px"
+            sizes="(max-width: 768px) 90vw, 1200px"
             className="w-auto h-auto max-w-full max-h-full shadow-[0_0_60px_0_rgba(255,255,255,0.2)]"
           />
         </div>

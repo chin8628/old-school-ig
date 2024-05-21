@@ -39,6 +39,7 @@ export const GridUploadButton = () => {
 
   return (
     <>
+      {/* Moving form logic to inside of UploadModal */}
       <form ref={formRef} action={formAction} onSubmit={handleSubmit}>
         <UploadButton handleUpload={handleUpload} />
         <input hidden type="file" accept="image/jpeg" name="photo" ref={fileInputRef} onChange={onUpload} />

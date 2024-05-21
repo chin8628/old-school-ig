@@ -11,6 +11,7 @@ export const GridUploadButton = () => {
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadCompleted, setUploadCompleted] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const [state, formAction] = useFormState(uploadPhotoAction, null);
 
@@ -18,7 +19,9 @@ export const GridUploadButton = () => {
     fileInputRef.current!.click();
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    setIsUploading(true);
+  };
 
   const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length === 1) {
@@ -30,6 +33,7 @@ export const GridUploadButton = () => {
   useEffect(() => {
     if (state !== null && Object.keys(state.errors).length === 0) {
       setUploadCompleted(true);
+      setIsUploading(false);
     }
   }, [state]);
 
@@ -47,6 +51,7 @@ export const GridUploadButton = () => {
                 setUploadCompleted(false);
               }
             }}
+            uploading={isUploading}
             previewUrl={previewUrl || ""}
             uploadCompleted={uploadCompleted}
           />

@@ -1,7 +1,10 @@
 import { ModalContainer } from "@/app/component/ModalContainer";
+import { SongPlayer } from "@/app/component/SongPlayer";
+
 import { PhotoInfo } from "@/service/gallery/photos";
 import { ExifData } from "@/service/gallery/upload";
 import Image from "next/image";
+import { useEffect } from "react";
 
 type PhotoModalProps = {
   photo: PhotoInfo;
@@ -27,14 +30,12 @@ const getShootingSettingsText = (exif: ExifData) =>
     .join(", ");
 
 export const PhotoModal = (props: PhotoModalProps) => {
-  const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
-
   return (
     <ModalContainer close={props.close}>
       <div className="flex flex-col md:flex-row max-w-[2048px] items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto">
         <div
           className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm p-2 md:p-8 bg-white"
-          onClick={stopPropagation}
+          onClick={(e) => e.stopPropagation()}
         >
           <Image
             src={props.photo.photoUrl}
@@ -47,9 +48,9 @@ export const PhotoModal = (props: PhotoModalProps) => {
         </div>
         <div
           className="bg-white drop-shadow-sm p-4 mt-3 md:mt-0 md:ml-3 w-full h-full max-h-[50vh] md:max-w-[300px] md:aspect-[3/4] flex flex-col"
-          onClick={stopPropagation}
+          onClick={(e) => e.stopPropagation()}
         >
-          <div>
+          <div className="flex flex-row justify-between w-full">
             <p className="text-xs text-neutral-600">
               {new Date(props.photo.createdAt).toLocaleString("en-US", {
                 dateStyle: "medium",
@@ -57,14 +58,21 @@ export const PhotoModal = (props: PhotoModalProps) => {
                 hour12: false,
               })}
             </p>
+            {props.photo.vibeSong.youtubeId && (
+              <SongPlayer
+                youtubeId={props.photo.vibeSong.youtubeId}
+                startTime={props.photo.vibeSong.startTime}
+                endTime={props.photo.vibeSong.endTime}
+              />
+            )}
           </div>
 
           {props.photo.story ? (
-            <div className="mt-2 flex-grow overflow-y-auto no-scrollbar">
+            <div className="mt-3 flex-grow overflow-y-auto no-scrollbar">
               <p className="text-sm text-neutral-600">{props.photo.story || ""}</p>
             </div>
           ) : (
-            <div className="mt-2 flex justify-center items-center flex-grow">
+            <div className="mt-3 flex justify-center items-center flex-grow">
               <p className="text-sm text-neutral-400 align-center">No story</p>
             </div>
           )}
@@ -76,12 +84,8 @@ export const PhotoModal = (props: PhotoModalProps) => {
             <p>{getShootingSettingsText(props.photo.exif)}</p>
           </div>
 
-          <div className="mt-2">
-            <a
-              href={props.photo.photoUrl}
-              target="_blank"
-              className="flex items-center space-x-2 text-xs text-neutral-600"
-            >
+          <div className="mt-2 flex justify-between">
+            <a href={props.photo.photoUrl} target="_blank" className="items-center space-x-2 text-xs text-neutral-600">
               <span>Original</span>
             </a>
           </div>

@@ -29,7 +29,7 @@ export const PhotoGrid = () => {
           />
         ))}
       </div>
-      {selectedPhoto !== null && <PhotoModal photo={selectedPhoto} close={() => setSelectedPhoto(null)} />}
+      {!!selectedPhoto && <PhotoModal photo={selectedPhoto} close={() => setSelectedPhoto(null)} />}
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import { ModalContainer } from "@/app/component/ModalContainer";
 import Image from "next/image";
-import { CheckBadgeIcon } from "@heroicons/react/24/outline";
+import { CheckBadgeIcon, MusicalNoteIcon, ClockIcon } from "@heroicons/react/24/outline";
 
 const LoadingSpinner = () => (
-  <div className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-white bg-opacity-50 backdrop-blur-sm">
+  <div className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-white bg-opacity-50 backdrop-blur-sm z-10">
     <div role="status">
       <svg
         aria-hidden="true"
@@ -35,6 +35,7 @@ type UploadModalProps = {
 
 export const UploadModal = (props: UploadModalProps) => {
   const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
+  const disabledAllInputs = props.uploadCompleted || props.uploading;
 
   return (
     <ModalContainer close={props.close}>
@@ -48,32 +49,64 @@ export const UploadModal = (props: UploadModalProps) => {
             alt="Preview"
             width={0}
             height={0}
-            className="w-auto h-auto max-h-[40vh] max-w-[98%] md:max-h-[80vh] md:max-w-[50vw] shadow-[0_0_60px_0_rgba(255,255,255,0.2)]"
+            className="w-auto h-auto max-w-full max-h-full shadow-[0_0_60px_0_rgba(255,255,255,0.2)]"
           />
         </div>
-        <div
-          className="bg-white drop-shadow-sm mt-3 md:mt-0 md:ml-3 w-full h-full max-h-[20vh] md:max-w-[300px] md:aspect-[3/4]"
-          onClick={stopPropagation}
-        >
-          {props.uploading && <LoadingSpinner />}
-          {props.uploadCompleted && (
-            <div className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-white bg-opacity-50 backdrop-blur-sm">
-              <CheckBadgeIcon className="h-14 text-orange-400" />
-              <p className="mt-4">You photo has been shared.</p>
+        <div className="flex flex-col w-full md:max-w-[300px]" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white drop-shadow-sm mt-3 md:mt-0 md:ml-3 w-full md:max-h-[90%]">
+            {props.uploading && <LoadingSpinner />}
+
+            {props.uploadCompleted && (
+              <div className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-white bg-opacity-50 backdrop-blur-sm">
+                <CheckBadgeIcon className="h-14 text-orange-400" />
+                <p className="mt-4">You photo has been shared.</p>
+              </div>
+            )}
+
+            <div className="w-full h-10 flex flex-row justify-between items-center p-4 border-b">
+              <h2 className="font-medium">New photo</h2>
+              <button type="submit" className="text-blue-500 hover:text-blue-800">
+                Share
+              </button>
             </div>
-          )}
-          <div className="w-full h-10 flex flex-row justify-between items-center p-4 border-b">
-            <h2 className="font-medium">New photo</h2>
-            <button className="text-blue-500 hover:text-blue-800">Share</button>
-          </div>
-          <div className="p-4 h-full">
-            <textarea
-              className="w-full outline-none resize-none appearance-none"
-              placeholder="What's a story behind it?"
-              name="story"
-              autoFocus
-              disabled={props.uploadCompleted}
-            ></textarea>
+
+            <div className="h-[150px] border-b">
+              <textarea
+                className="p-4 w-full h-full outline-none resize-none appearance-none"
+                placeholder="What's a story behind it?"
+                name="story"
+                autoFocus
+                disabled={disabledAllInputs}
+              ></textarea>
+            </div>
+
+            <div className="flex flex-row items-center">
+              <span className="px-2">
+                <MusicalNoteIcon className="text-gray-600 w-4" />
+              </span>
+              <input
+                name="youtubeLink"
+                placeholder="Add a vibe song by Youtube link"
+                className="w-full h-10 pr-4 outline-none autofill:bg-white"
+              />
+            </div>
+            <div className="flex flex-row items-center">
+              <span className="px-2">
+                <ClockIcon className="text-gray-600 w-4" />
+              </span>
+              <input
+                name="startTime"
+                placeholder="Start (optional)"
+                className="w-full h-10 pr-4 outline-none"
+                disabled={disabledAllInputs}
+              />
+              <input
+                name="stopTime"
+                placeholder="Stop (optional)"
+                className="w-full h-10 pr-4 outline-none"
+                disabled={disabledAllInputs}
+              />
+            </div>
           </div>
         </div>
       </div>

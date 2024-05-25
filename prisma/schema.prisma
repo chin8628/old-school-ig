@@ -1,0 +1,35 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model photo {
+  id           Int       @id @default(autoincrement())
+  fileName     String?
+  createdAt    DateTime? @default(now())
+  shutterSpeed String?
+  fNumber      String?
+  maker        String?
+  model        String?
+  lensModel    String?
+  createDate   DateTime?
+  imageHeight  String?
+  imageWidth   String?
+  iso          String?
+  focalLength  String?
+  story        String?
+  vibeSongId   Int?
+  vibeSong     vibeSong? @relation(fields: [vibeSongId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model vibeSong {
+  id        Int     @id @default(autoincrement())
+  youtubeId String?
+  startTime Int?
+  endTime   Int?
+  photo     photo[]
+}

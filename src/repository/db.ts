@@ -1,12 +1,18 @@
-import sqlite3 from "sqlite3";
+import { PrismaClient } from '@prisma/client'
 
-// TODO: Need to get away from sqlite3 -> Prisma
-let instance: sqlite3.Database | null = null;
+declare const globalThis: {
+  prismaGlobal: PrismaClient;
+} & typeof global;
 
-export const getSqliteInstance = (): sqlite3.Database => {
-  if (!instance) {
-    instance = new sqlite3.Database("./db/local.db");
+export const prisma = globalThis.prismaGlobal ?? new PrismaClient();
+
+export const runThenClose = async (queryFunc: Promise<any>) => {
+  try {
+    return await queryFunc;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  } finally {
+    await prisma.$disconnect();
   }
-
-  return instance;
 };

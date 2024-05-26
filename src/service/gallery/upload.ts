@@ -19,10 +19,10 @@ export type ExifData = {
 const extractExif = (fileBuffer: Buffer): ExifData => {
   const exif = ExifReader.load(fileBuffer);
   return {
-    iso: exif.ISOSpeedRatings?.description || null,
+    iso: exif.ISOSpeedRatings?.description.toString() || null,
     shutterSpeed: exif.ShutterSpeedValue?.description || null,
     fNumber: exif.FNumber?.description || null,
-    focalLength: exif.FocalLengthIn35mmFilm?.description || null,
+    focalLength: exif.FocalLengthIn35mmFilm?.description.toString() || null,
     maker: exif.Make?.description || null,
     model: exif.Model?.description || null,
     lensModel: exif.LensModel?.description || null,

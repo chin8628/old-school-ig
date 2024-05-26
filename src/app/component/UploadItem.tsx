@@ -15,6 +15,13 @@ export const GridUploadButton = () => {
 
   const [state, formAction] = useFormState(uploadPhotoAction, null);
 
+  const resetUploadState = () => {
+    setPreviewUrl(null);
+    setUploadCompleted(false);
+    setIsUploading(false);
+    previewUrl && URL.revokeObjectURL(previewUrl);
+  };
+
   const handleUpload = () => {
     fileInputRef.current!.click();
   };
@@ -47,9 +54,7 @@ export const GridUploadButton = () => {
           <UploadModal
             close={() => {
               if (uploadCompleted || confirm("Discard? If you leave, your edits won't be saved.")) {
-                setPreviewUrl(null);
-                previewUrl && URL.revokeObjectURL(previewUrl);
-                setUploadCompleted(false);
+                resetUploadState();
               }
             }}
             uploading={isUploading}

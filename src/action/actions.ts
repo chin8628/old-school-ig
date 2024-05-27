@@ -1,4 +1,5 @@
 "use server";
+import { updateProfileInfo } from "@/service/account/profile";
 import { uploadPhoto } from "@/service/gallery/upload";
 import { z } from "zod";
 
@@ -50,6 +51,34 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
     youtubeId: validatedFields.data.youtubeLink?.match(validateToHaveYoutubeId)?.[1],
     startTime: (validatedFields.data.startTime && Number.parseInt(validatedFields.data.startTime, 10)) || undefined,
     stopTime: (validatedFields.data.stopTime && Number.parseInt(validatedFields.data.stopTime, 10)) || undefined,
+  });
+
+  return {
+    errors: {},
+  };
+};
+
+export const editProfileAction = async (_: Record<string, unknown> | null, f: FormData) => {
+  "use server";
+  const schema = z.object({
+    displayName: z.string().max(100).optional().default(""),
+    shortBio: z.string().max(240).optional().default(""),
+  });
+
+  const validatedFields = schema.safeParse({
+    displayName: f.get("displayName"),
+    shortBio: f.get("shortBio"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  await updateProfileInfo({
+    displayName: validatedFields.data.displayName,
+    shortBio: validatedFields.data.shortBio,
   });
 
   return {

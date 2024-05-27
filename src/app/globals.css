@@ -4,6 +4,7 @@
 
 a {
   text-decoration: underline;
+  @apply text-neutral-600
 }
 
 @layer utilities {

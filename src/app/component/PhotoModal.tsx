@@ -12,8 +12,8 @@ type PhotoModalProps = {
 };
 
 const getIsoTextIfExist = (iso: string | null) => (iso ? `ISO ${iso}` : "");
-const getCameraModelTextIfExist = (make: string | null, model: string | null) =>
-  make && model ? `${make} ${model}` : "";
+const getCameraModelTextIfExist = (maker: string | null, model: string | null) =>
+  maker && model ? `${maker} ${model}` : "";
 const getLensModelTextIfExist = (lensModel: string | null) => (lensModel ? `${lensModel}` : "");
 const getFocalLengthTextIfExist = (focalLength: string | null) => (focalLength ? `${focalLength} mm` : "");
 const getShutterSpeedTextIfExist = (shutterSpeed: string | null) => (shutterSpeed ? `${shutterSpeed} sec` : "");
@@ -79,7 +79,7 @@ export const PhotoModal = (props: PhotoModalProps) => {
           <div className="h-px w-full my-4 bg-gray-300" />
 
           <div className="text-xs text-neutral-600">
-            <p>{getCameraModelTextIfExist(props.photo.exif.make, props.photo.exif.model)}</p>
+            <p>{getCameraModelTextIfExist(props.photo.exif.maker, props.photo.exif.model)}</p>
             <p>{getLensModelTextIfExist(props.photo.exif.lensModel)}</p>
             <p>{getShootingSettingsText(props.photo.exif)}</p>
           </div>

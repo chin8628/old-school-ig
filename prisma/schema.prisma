@@ -22,8 +22,12 @@ model photo {
   iso          String?
   focalLength  String?
   story        String?
-  vibeSongId   Int?
-  vibeSong     vibeSong? @relation(fields: [vibeSongId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  vibeSongId Int?
+  vibeSong   vibeSong? @relation(fields: [vibeSongId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  profileId Int?
+  profile   profile? @relation(fields: [profileId], references: [id])
 }
 
 model vibeSong {
@@ -32,4 +36,14 @@ model vibeSong {
   startTime Int?
   endTime   Int?
   photo     photo[]
+}
+
+model profile {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  displayName String
+  shortBio    String
+  photo       photo[]
 }

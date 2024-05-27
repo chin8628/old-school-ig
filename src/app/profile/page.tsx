@@ -1,10 +1,17 @@
 "use server";
 import { ProfileSection } from "@/app/profile/ProfileSection";
 import { getProfileInfo } from "@/service/account/profile";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const profile = await getProfileInfo();
+  const session = await getServerSession();
+
+  if (!session) {
+    redirect("/signin");
+  }
 
   return (
     <div className="flex flex-col items-start md:items-center justify-start h-screen bg-slate-50 p-0 py-8 sm:py-16 sm:px-[20vw] px-4">

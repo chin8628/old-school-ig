@@ -6,7 +6,7 @@ import { z } from "zod";
 
 export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: FormData) => {
   const session = await getServerSession();
-  if (!session) {
+  if (!session?.user?.name) {
     return {
       errors: {
         session: "You need to login to upload a photo.",

@@ -32,20 +32,23 @@ const extractExif = (fileBuffer: Buffer): ExifData => {
   };
 };
 
-export async function uploadPhoto(data: {
-  file: File;
-  story: string;
-  youtubeId?: string;
-  startTime?: number;
-  stopTime?: number;
-}): Promise<string> {
+export async function uploadPhoto(
+  username: string,
+  data: {
+    file: File;
+    story: string;
+    youtubeId?: string;
+    startTime?: number;
+    stopTime?: number;
+  }
+): Promise<string> {
   try {
     const fileName = `${uuidv4()}.jpg`;
     const fileBuffer = Buffer.from(await data.file.arrayBuffer());
     const exif = extractExif(fileBuffer);
 
     await uploadFileToMinio(fileBuffer, `/upload/photo/${fileName}`);
-    await savePhotoInfo({
+    await savePhotoInfo(username, {
       fileName,
       exif,
       story: data.story,
@@ -61,14 +64,17 @@ export async function uploadPhoto(data: {
   }
 }
 
-export async function savePhotoInfo(data: {
-  fileName: string;
-  exif: ExifData;
-  story: string;
-  youtubeId?: string;
-  startTime?: number;
-  stopTime?: number;
-}): Promise<void> {
+export async function savePhotoInfo(
+  username: string,
+  data: {
+    fileName: string;
+    exif: ExifData;
+    story: string;
+    youtubeId?: string;
+    startTime?: number;
+    stopTime?: number;
+  }
+): Promise<void> {
   try {
     await prisma.photo.create({
       data: {
@@ -94,6 +100,11 @@ export async function savePhotoInfo(data: {
               },
             }
           : undefined,
+        user: {
+          connect: {
+            username,
+          },
+        },
       },
     });
   } catch (error) {

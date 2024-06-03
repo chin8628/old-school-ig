@@ -1,9 +1,19 @@
 "use server";
 import { updateProfileInfo } from "@/service/account/profile";
 import { uploadPhoto } from "@/service/gallery/upload";
+import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: FormData) => {
+  const session = await getServerSession();
+  if (!session) {
+    return {
+      errors: {
+        session: "You need to login to upload a photo.",
+      },
+    };
+  }
+
   const validateYoutubeDomain = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)/;
   const validateToHaveYoutubeId = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
 
@@ -42,7 +52,7 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
     };
   }
 
-  await uploadPhoto({
+  await uploadPhoto(session?.user?.name, {
     file: validatedFields.data.photo,
     story: validatedFields.data.story,
     youtubeId: validatedFields.data.youtubeLink?.match(validateToHaveYoutubeId)?.[1],

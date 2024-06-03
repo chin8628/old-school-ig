@@ -4,8 +4,6 @@ import { uploadPhoto } from "@/service/gallery/upload";
 import { z } from "zod";
 
 export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: FormData) => {
-  console.log("test");
-
   const validateYoutubeDomain = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)/;
   const validateToHaveYoutubeId = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
 
@@ -39,7 +37,6 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
   });
 
   if (!validatedFields.success) {
-    console.log("🚀 ~ uploadPhotoAction ~ validatedFields:", validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
     };

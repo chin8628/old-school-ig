@@ -89,8 +89,14 @@ export const getPhotoListWithPagination = async (page: number, perPage: number):
       },
     };
   });
-}
+};
 
-export const getTotalNumberOfPhotos = async (): Promise<number> => {
-  return await prisma.photo.count();
+export const getTotalNumberOfPhotos = async (username: string): Promise<number> => {
+  return await prisma.photo.count({
+    where: {
+      user: {
+        username,
+      },
+    },
+  });
 };

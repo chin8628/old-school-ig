@@ -1,6 +1,6 @@
 "use client";
 import { editProfileAction } from "@/action/actions";
-import { UpdateProfileButton } from "@/app/profile/component/UpdateProfileButton";
+import { UpdateProfileButton } from "@/app/profile/edit/component/UpdateProfileButton";
 import { ProfileInfo } from "@/service/account/profile";
 import { useFormState } from "react-dom";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";

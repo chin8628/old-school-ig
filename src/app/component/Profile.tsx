@@ -1,12 +1,20 @@
 "use server";
-import { getProfileInfo } from "@/service/account/profile";
+import { getProfileInfoByUsername } from "@/service/account/profile";
 import { getTotalNumberOfPhotos } from "@/service/gallery/photos";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export const Profile = async () => {
-  const profile = await getProfileInfo();
-  const session = await getServerSession();
+type ProfileProps = {
+  username: string;
+};
+
+export const Profile = async (props: ProfileProps) => {
+  const [session, profile] = await Promise.all([getServerSession(), getProfileInfoByUsername(props.username)]);
+
+  if (!profile) {
+    notFound();
+  }
 
   return (
     <div className="flex items-center">
@@ -26,7 +34,7 @@ export const Profile = async () => {
           )}
         </div>
         <p className="text-gray-500">{profile.shortBio}</p>
-        <p className="text-gray-500">{await getTotalNumberOfPhotos()} photos</p>
+        <p className="text-gray-500">{await getTotalNumberOfPhotos(props.username)} photos</p>
       </div>
     </div>
   );

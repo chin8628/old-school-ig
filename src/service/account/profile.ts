@@ -5,10 +5,21 @@ export type ProfileInfo = {
   shortBio: string;
 };
 
-export const getProfileInfo = async (): Promise<ProfileInfo> => {
-  const profile = await prisma.profile.findFirst();
+export const getProfileInfoByUsername = async (username: string): Promise<ProfileInfo | null> => {
+  const profile = await prisma.profile.findFirst({
+    where: {
+      user: {
+        username,
+      },
+    },
+    select: {
+      displayName: true,
+      shortBio: true,
+    },
+  });
+
   if (!profile) {
-    throw new Error("Profile not found");
+    return null;
   }
 
   return {

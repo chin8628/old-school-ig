@@ -1,15 +1,18 @@
 "use server";
-import { ProfileSection } from "@/app/profile/ProfileSection";
-import { getProfileInfo } from "@/service/account/profile";
+import { ProfileSection } from "@/app/profile/edit/ProfileSection";
+import { getProfileInfoByUsername } from "@/service/account/profile";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
-  const profile = await getProfileInfo();
   const session = await getServerSession();
-
   if (!session) {
+    redirect("/signin");
+  }
+
+  const profile = await getProfileInfoByUsername(session.user?.name as string);
+  if (!profile) {
     redirect("/signin");
   }
 

@@ -25,6 +25,7 @@ export const getAllPhotos = async (): Promise<PhotoInfo[]> => {
     },
   });
 
+  // @ts-ignore
   return result.map((photo) => {
     return {
       id: photo.id.toString(),
@@ -64,6 +65,7 @@ export const getPhotoListWithPagination = async (page: number, perPage: number):
     take: perPage,
   });
 
+  // @ts-ignore
   return result.map((photo) => {
     return {
       id: photo.id.toString(),

@@ -2,11 +2,9 @@ name: build and push docker image
 
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
   pull_request:
-    branches:    
-      - master
+    branches: [ "master" ]
 
 jobs:
   pre-cache-node:
@@ -26,7 +24,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    if: github.ref_name == 'main'
+    if: github.ref_name == 'master'
     steps:
       - uses: actions/checkout@v3
       

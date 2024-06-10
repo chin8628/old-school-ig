@@ -18,7 +18,9 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
   const validateToHaveYoutubeId = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
 
   const schema = z.object({
-    photo: z.instanceof(File),
+    photo: z
+      .any()
+      .refine((files) => ["image/jpeg", "image/jpg"].includes(files.type), ".jpg and .jpeg files are accepted."),
     story: z.string().optional().default(""),
     youtubeLink: z
       .string()

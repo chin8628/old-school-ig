@@ -34,6 +34,7 @@ export const signUpAction = async (_: Record<string, unknown> | null, f: FormDat
   try {
     await createUser(validatedFields.data.username, validatedFields.data.password);
   } catch (e) {
+    console.error(e);
     return {
       errors: {
         username: ["Having problem creating user. Please try again later."],

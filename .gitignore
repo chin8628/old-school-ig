@@ -38,5 +38,5 @@ next-env.d.ts
 # Linux
 *.Identifier
 
-*.db
+*.sqlite
 *.db-journal

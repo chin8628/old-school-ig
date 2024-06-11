@@ -27,7 +27,8 @@ ENV PORT 3000
 ENV NODE_ENV production
 ENV DATABASE_URL=file:/app/database/main.sqlite
 ENV MINIO_ENDPOINT=minio.cloudian.in.th
-ENV MINIO_BUCKET=old-school-igENV MINIO_PHOTO_PATH=https://minio.cloudian.in.th/old-school-ig/upload/photo
+ENV MINIO_BUCKET=old-school-ig
+ENV MINIO_PHOTO_PATH=https://minio.cloudian.in.th/old-school-ig/upload/photo
 
 VOLUME /app/database
 

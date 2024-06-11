@@ -44,6 +44,7 @@ export const GridUploadButton = () => {
     }
   }, [state]);
 
+  // Need an error handler
   return (
     <>
       {/* Moving form logic to inside of UploadModal */}

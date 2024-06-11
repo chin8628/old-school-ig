@@ -49,6 +49,7 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
   });
 
   if (!validatedFields.success) {
+    console.debug(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
     };

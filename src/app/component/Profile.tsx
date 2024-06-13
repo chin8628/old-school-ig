@@ -18,7 +18,7 @@ export const Profile = async (props: ProfileProps) => {
 
   return (
     <div className="flex items-center">
-      <div className="w-16 h-16 rounded-full overflow-hidden">
+      <div className="w-16 h-16 rounded-full overflow-hidden shrink-0">
         <img src="/images/profile.jpg" alt="Profile" className="w-full h-full object-cover" />
       </div>
       <div className="ml-4">

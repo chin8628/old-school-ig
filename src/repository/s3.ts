@@ -22,18 +22,30 @@ async function uploadFileToMinio(fileBuffer: Buffer, fileName: string): Promise<
   const client = initializeMinioClient();
 
   const metaData = {
-    "Content-Type": 'image/jpeg',
+    "Content-Type": "image/jpeg",
   };
-  
+
   return new Promise(async (resolve, reject) => {
-    client.putObject(process.env.MINIO_BUCKET!, fileName, fileBuffer, fileBuffer.byteLength, metaData, (error: Error | null) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
+    client.putObject(
+      process.env.MINIO_BUCKET!,
+      fileName,
+      fileBuffer,
+      fileBuffer.byteLength,
+      metaData,
+      (error: Error | null) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
       }
-    });
+    );
   });
+}
+
+export async function deleteFileFromMinio(fileName: string): Promise<void> {
+  const client = initializeMinioClient();
+  return await client.removeObject(process.env.MINIO_BUCKET!, `/upload/photo/${fileName}`);
 }
 
 export { uploadFileToMinio };

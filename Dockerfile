@@ -23,8 +23,8 @@ RUN mkdir /app/database && touch /app/database/main.sqlite
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV NODE_ENV production
+ENV PORT=3000
+ENV NODE_ENV=production
 ENV DATABASE_URL=file:/app/database/main.sqlite
 ENV MINIO_ENDPOINT=minio.cloudian.in.th
 ENV MINIO_BUCKET=old-school-ig

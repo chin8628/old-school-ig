@@ -8,6 +8,11 @@ const nextConfig = {
         hostname: "minio.cloudian.in.th",
         pathname: "/old-school-ig/**",
       },
+      {
+        protocol: "http",
+        hostname: "minio",
+        pathname: "/old-school-ig/**",
+      },
     ],
   },
 };

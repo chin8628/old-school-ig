@@ -60,6 +60,9 @@ export const UploadModal = (props: UploadModalProps) => {
               <div className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-white bg-opacity-50 backdrop-blur-sm">
                 <CheckBadgeIcon className="h-14 text-orange-400" />
                 <p className="mt-4">You photo has been shared.</p>
+                <a href="/" className="mt-2">
+                  Go Back
+                </a>
               </div>
             )}
 

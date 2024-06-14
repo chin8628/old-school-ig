@@ -15,7 +15,7 @@ export const PhotoItem: React.FC<PhotoItemProps> = (props) => {
         alt={`Photo`}
         width={0}
         height={0}
-        sizes="300px"
+        sizes="500px"
         className="object-cover h-auto w-full aspect-square"
         priority={props.priority}
       />

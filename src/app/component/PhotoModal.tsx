@@ -48,8 +48,9 @@ export const PhotoModal = (props: PhotoModalProps) => {
             alt="Photo"
             width={0}
             height={0}
-            sizes="(max-width: 768px) 90vw, 1200px"
+            sizes="(max-width: 768px) 90vw, 1800px"
             className="w-auto h-auto max-w-full max-h-full shadow-[0_0_60px_0_rgba(255,255,255,0.2)]"
+            quality={90}
           />
         </div>
         <div

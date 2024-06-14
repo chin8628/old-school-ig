@@ -17,7 +17,7 @@ export default async function UserPage(props: UserPageProps) {
           <div className="p-4 sm:p-8 flex flex-row justify-between items-center w-full">
             <Profile username={username} />
           </div>
-          <PhotoGrid />
+          <PhotoGrid username={username} />
         </div>
       </main>
     </div>

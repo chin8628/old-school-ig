@@ -7,7 +7,11 @@ import { useEffect, useRef, useState } from "react";
 
 let reachedTheEnd = false;
 
-export const PhotoGrid = () => {
+type PhotoGridProps = {
+  username: string;
+};
+
+export const PhotoGrid = (props: PhotoGridProps) => {
   const [photos, setPhotos] = useState<PhotoInfo[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoInfo | null>(null);
   const [page, setPage] = useState(1);
@@ -18,7 +22,7 @@ export const PhotoGrid = () => {
     if (reachedTheEnd) return;
 
     setLoading(true);
-    const newPhotos = await getPhotoListWithPagination(page, 18);
+    const newPhotos = await getPhotoListWithPagination(props.username, page, 18);
     reachedTheEnd = newPhotos.length === 0;
     setPhotos((prevPhotos) => {
       const mergedPhotos = new Map();

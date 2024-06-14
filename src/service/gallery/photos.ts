@@ -53,8 +53,13 @@ export const getAllPhotos = async (): Promise<PhotoInfo[]> => {
   });
 };
 
-export const getPhotoListWithPagination = async (page: number, perPage: number): Promise<PhotoInfo[]> => {
+export const getPhotoListWithPagination = async (username: string, page: number, perPage: number): Promise<PhotoInfo[]> => {
   const result = await prisma.photo.findMany({
+    where: {
+      user: {
+        username,
+      },
+    },
     orderBy: {
       id: "desc",
     },

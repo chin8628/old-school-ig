@@ -98,7 +98,7 @@ export const PhotoModal = (props: PhotoModalProps) => {
           </div>
 
           <div className="mt-2 flex justify-between">
-            <a href={props.photo.photoUrl} target="_blank" className="items-center space-x-2 text-xs text-neutral-600">
+            <a href={props.photo.nonNextJsPhotoUrl} target="_blank" className="items-center space-x-2 text-xs text-neutral-600">
               <span>Original</span>
             </a>
             {session && (

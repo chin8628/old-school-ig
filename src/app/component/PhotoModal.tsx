@@ -5,10 +5,7 @@ import { SongPlayer } from "@/app/component/SongPlayer";
 
 import { PhotoInfo } from "@/service/gallery/photos";
 import { ExifData } from "@/service/gallery/upload";
-import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 type PhotoModalProps = {
   photo: PhotoInfo;
@@ -34,14 +31,10 @@ const getShootingSettingsText = (exif: ExifData) =>
     .join(", ");
 
 export const PhotoModal = (props: PhotoModalProps) => {
-  const [session, setSession] = useState<Session | null>();
-  useEffect(() => {
-    const asyncFn = async () => {
-      setSession(await getSession());
-    };
-
-    asyncFn();
-  }, []);
+  const deletePhoto = async () => {
+    await deletePhotoAction(props.photo.id);
+    window.location.reload();
+  };
 
   return (
     <ModalContainer close={props.close}>
@@ -98,15 +91,15 @@ export const PhotoModal = (props: PhotoModalProps) => {
           </div>
 
           <div className="mt-2 flex justify-between">
-            <a href={props.photo.nonNextJsPhotoUrl} target="_blank" className="items-center space-x-2 text-xs text-neutral-600">
+            <a
+              href={props.photo.nonNextJsPhotoUrl}
+              target="_blank"
+              className="items-center space-x-2 text-xs text-neutral-600"
+            >
               <span>Original</span>
             </a>
-            {session && (
-              <a
-                href="#"
-                className="items-center space-x-2 text-xs text-neutral-600"
-                onClick={() => deletePhotoAction(props.photo.id)}
-              >
+            {props.photo.permission.canDelete && (
+              <a href="#" className="items-center space-x-2 text-xs text-neutral-600" onClick={deletePhoto}>
                 Delete
               </a>
             )}

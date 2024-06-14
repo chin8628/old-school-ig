@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@/repository/db";
 import { ExifData } from "@/service/gallery/upload";
+import { getServerSession } from "next-auth";
 
 const MINIO_PUBLIC_UPLOAD_PHOTO_PATH = "https://minio.cloudian.in.th/old-school-ig/upload/photo";
 
@@ -16,6 +17,9 @@ export type PhotoInfo = {
     startTime?: string;
     endTime?: string;
   };
+  permission: {
+    canDelete: boolean;
+  };
 };
 
 export const getPhotoListWithPagination = async (
@@ -23,6 +27,7 @@ export const getPhotoListWithPagination = async (
   page: number,
   perPage: number
 ): Promise<PhotoInfo[]> => {
+  const session = await getServerSession();
   const result = await prisma.photo.findMany({
     where: {
       user: {
@@ -63,6 +68,9 @@ export const getPhotoListWithPagination = async (
         youtubeId: photo.vibeSong?.youtubeId ?? undefined,
         startTime: photo.vibeSong?.startTime?.toFixed() ?? undefined,
         endTime: photo.vibeSong?.endTime?.toFixed() ?? undefined,
+      },
+      permission: {
+        canDelete: session?.user?.name === username,
       },
     };
   });

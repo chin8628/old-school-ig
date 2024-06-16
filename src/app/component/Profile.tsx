@@ -24,7 +24,7 @@ export const Profile = async (props: ProfileProps) => {
       </div>
       <div className="ml-4">
         <div className="flex flex-row items-center space-x-2">
-          <h1 className="text-xl font-bold">{profile.displayName}</h1>
+          <h1 className="text-lg font-bold">{profile.displayName}</h1>
           {session !== null && (
             <Link
               className="p-3 py-1 bg-gray-100 text-xs text-neutral-800 hover:bg-gray-200 rounded no-underline"
@@ -34,8 +34,11 @@ export const Profile = async (props: ProfileProps) => {
             </Link>
           )}
         </div>
-        <p className="text-gray-500">{profile.shortBio}</p>
-        <p className="text-gray-500">{await getTotalNumberOfPhotos(props.username)} photos</p>
+        <p className="text-sm text-gray-500">
+          {profile.shortBio.slice(0, 120)}
+          {profile.shortBio.length > 120 && "..."}
+        </p>
+        <p className="mt-1 text-xs text-gray-500">{await getTotalNumberOfPhotos(props.username)} photos</p>
       </div>
     </div>
   );

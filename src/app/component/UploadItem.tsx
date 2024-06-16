@@ -1,5 +1,5 @@
 "use client";
-import { uploadPhotoAction } from "@/action/actions";
+import { uploadPhotoAction } from "@/action/photoAction";
 import { UploadModal } from "@/app/component/UploadModal";
 import React, { useEffect, useRef, useState } from "react";
 import { UploadButton } from "./UploadButton";

@@ -1,6 +1,6 @@
 "use server";
 import { ProfileSection } from "@/app/profile/edit/ProfileSection";
-import { getProfileInfoByUsername } from "@/service/account/profile";
+import { getProfileInfoByUsername } from "@/service/profile";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";

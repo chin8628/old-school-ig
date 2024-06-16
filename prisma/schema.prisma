@@ -47,6 +47,7 @@ model Profile {
 
   displayName String
   shortBio    String
+  avatarUrl   String?
   photo       Photo[]
   user        User    @relation(fields: [userId], references: [id])
   userId      Int     @unique

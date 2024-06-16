@@ -1,10 +1,11 @@
 "use client";
-import { editProfileAction } from "@/action/actions";
+import { editProfileAction } from "@/action/profile";
+import { AvatarSelection } from "@/app/profile/edit/component/AvatarSelection";
 import { UpdateProfileButton } from "@/app/profile/edit/component/UpdateProfileButton";
-import { ProfileInfo } from "@/service/account/profile";
-import { useFormState } from "react-dom";
+import { ProfileInfo } from "@/service/profile";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { useFormState } from "react-dom";
 
 type ProfileSectionProps = {
   profile: ProfileInfo;
@@ -31,6 +32,8 @@ export const ProfileSection = (props: ProfileSectionProps) => {
 
       <form className="space-y-3" action={formAction}>
         <div className="space-y-1">
+          <AvatarSelection avatarUrl={props.profile.avatarUrl} />
+
           <div>
             <label htmlFor="displayName" className="block text-sm">
               Display Name <span className="text-neutral-500">({displayNameLength}/100)</span>

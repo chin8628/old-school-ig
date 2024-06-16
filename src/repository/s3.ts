@@ -45,7 +45,7 @@ async function uploadFileToMinio(fileBuffer: Buffer, fileName: string): Promise<
 
 export async function deleteFileFromMinio(fileName: string): Promise<void> {
   const client = initializeMinioClient();
-  return await client.removeObject(process.env.MINIO_BUCKET!, `/upload/photo/${fileName}`);
+  return await client.removeObject(process.env.MINIO_BUCKET!, fileName);
 }
 
 export { uploadFileToMinio };

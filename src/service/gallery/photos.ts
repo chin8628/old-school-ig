@@ -49,7 +49,7 @@ export const getPhotoListWithPagination = async (
     return {
       id: photo.id.toString(),
       nonNextJsPhotoUrl: `${MINIO_PUBLIC_UPLOAD_PHOTO_PATH}/${photo.fileName}`,
-      photoUrl: `${process.env.MINIO_PHOTO_PATH}/${photo.fileName}`,
+      photoUrl: `${process.env.MINIO_PATH}/upload/photo/${photo.fileName}`,
       createdAt: photo.createdAt?.toISOString() || "",
       exif: {
         iso: photo.iso,

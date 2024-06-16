@@ -1,9 +1,10 @@
 "use server";
-import { getProfileInfoByUsername } from "@/service/account/profile";
+import { getProfileInfoByUsername } from "@/service/profile";
 import { getTotalNumberOfPhotos } from "@/service/gallery/photos";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 type ProfileProps = {
   username: string;
@@ -19,7 +20,7 @@ export const Profile = async (props: ProfileProps) => {
   return (
     <div className="flex items-center">
       <div className="w-16 h-16 rounded-full overflow-hidden shrink-0">
-        <img src="/images/profile.jpg" alt="Profile" className="w-full h-full object-cover" />
+        <Image src={profile.avatarUrl} alt="Profile" className="w-full h-full object-cover" width={64} height={64} />
       </div>
       <div className="ml-4">
         <div className="flex flex-row items-center space-x-2">

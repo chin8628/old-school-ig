@@ -19,22 +19,13 @@ COPY --from=builder /app/.next/standalone .
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
-RUN mkdir /app/database && touch /app/database/main.sqlite
-
 EXPOSE 3000
 
 ENV PORT=3000
 ENV NODE_ENV=production
-ENV DATABASE_URL=file:/app/database/main.sqlite
 ENV MINIO_ENDPOINT=minio.cloudian.in.th
 ENV MINIO_BUCKET=old-school-ig
 ENV MINIO_PATH=https://minio.cloudian.in.th/old-school-ig
-
-VOLUME /app/database
-
-# RUN rm -rf /app/database/* && touch /app/database/main.sqlite
-# RUN mv /app/public /app/.next/standalone/public
-# RUN mv /app/.next/static /app/.next/standalone/.next/static
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output

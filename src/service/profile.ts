@@ -33,7 +33,7 @@ export const getProfileInfoByUsername = async (username: string): Promise<Profil
   return {
     displayName: profile.displayName,
     shortBio: profile.shortBio,
-    avatarUrl: `${AVATAR_BASE_URL}/${profile.avatarUrl}` || "/images/avatar.jpg",
+    avatarUrl: profile.avatarUrl ? `${AVATAR_BASE_URL}/${profile.avatarUrl}` : "/images/avatar.jpg",
   };
 };
 

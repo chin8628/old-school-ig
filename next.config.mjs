@@ -9,7 +9,7 @@ const nextConfig = {
         pathname: "/old-school-ig/**",
       },
       {
-        protocol: "http",
+        protocol: "https",
         hostname: "minio",
         pathname: "/old-school-ig/**",
       },

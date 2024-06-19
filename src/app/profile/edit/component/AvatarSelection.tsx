@@ -87,7 +87,7 @@ export const AvatarSelection = (props: AvatarSelectionProps) => {
   return (
     <div className="border w-full py-4 px-4 mb-6 rounded-md flex flex-row justify-between items-center">
       <div className="w-16 h-16 rounded-full overflow-hidden shrink-0">
-        <img src={avatarUrl} alt="Profile" width={64} height={64} />
+        <Image src={avatarUrl} alt="Profile" width={64} height={64} />
       </div>
 
       <button

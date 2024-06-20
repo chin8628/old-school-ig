@@ -5,8 +5,6 @@ import { PhotoModal } from "@/app/component/PhotoModal";
 import { PhotoInfo, getPhotoListWithPagination } from "@/service/gallery/photos";
 import { useEffect, useRef, useState } from "react";
 
-let reachedTheEnd = false;
-
 type PhotoGridProps = {
   username: string;
 };
@@ -16,14 +14,15 @@ export const PhotoGrid = (props: PhotoGridProps) => {
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoInfo | null>(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const reachedTheEnd = useRef<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const getPhotos = async () => {
-    if (reachedTheEnd) return;
+    if (reachedTheEnd.current) return;
 
     setLoading(true);
     const newPhotos = await getPhotoListWithPagination(props.username, page, 18);
-    reachedTheEnd = newPhotos.length === 0;
+    reachedTheEnd.current = newPhotos.length === 0;
     setPhotos((prevPhotos) => {
       const mergedPhotos = new Map();
       prevPhotos.forEach((photo) => mergedPhotos.set(photo.id, photo));

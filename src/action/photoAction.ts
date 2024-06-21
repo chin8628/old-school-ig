@@ -4,7 +4,15 @@ import { prisma } from "@/repository/db";
 import { deleteFileFromMinio } from "@/repository/s3";
 import { uploadPhoto } from "@/service/gallery/upload";
 import { getServerSession } from "next-auth";
+import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
+
+const cleanStoryInput = (story: string) => {
+  return sanitizeHtml(story, {
+    allowedTags: [],
+    allowedAttributes: {},
+  }).replace(/\n/g, "<br>");
+};
 
 export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: FormData) => {
   const session = await getServerSession();
@@ -59,7 +67,7 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
 
   await uploadPhoto(session?.user?.name, {
     file: validatedFields.data.photo,
-    story: validatedFields.data.story,
+    story: cleanStoryInput(validatedFields.data.story),
     youtubeId: validatedFields.data.youtubeLink?.match(validateToHaveYoutubeId)?.[1],
     startTime: (validatedFields.data.startTime && Number.parseInt(validatedFields.data.startTime, 10)) || undefined,
     stopTime: (validatedFields.data.stopTime && Number.parseInt(validatedFields.data.stopTime, 10)) || undefined,

@@ -76,7 +76,12 @@ export const PhotoModal = (props: PhotoModalProps) => {
 
           {props.photo.story ? (
             <div className="mt-3 flex-grow overflow-y-auto no-scrollbar">
-              <p className="text-sm text-neutral-600">{props.photo.story || ""}</p>
+              <p
+                className="text-sm text-neutral-600"
+                dangerouslySetInnerHTML={{
+                  __html: props.photo.story,
+                }}
+              />
             </div>
           ) : (
             <div className="mt-3 flex justify-center items-center flex-grow">

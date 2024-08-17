@@ -1,6 +1,6 @@
 "use server";
 
-import { sendForgotPasswordEmail } from "@/service/forgotPassword";
+import { sendResetPasswordEmail } from "@/service/resetPassword";
 import { z } from "zod";
 
 export const fotgotPasswordAction = async (_: Record<string, unknown> | null, f: FormData) => {
@@ -19,7 +19,7 @@ export const fotgotPasswordAction = async (_: Record<string, unknown> | null, f:
   }
 
   try {
-    await sendForgotPasswordEmail(validatedFields.data.email);
+    await sendResetPasswordEmail(validatedFields.data.email);
   } catch (e) {
     console.error(e);
 

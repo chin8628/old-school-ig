@@ -4,7 +4,6 @@ import { useFormState } from "react-dom";
 
 export const ForgotPasswordForm = () => {
   const [state, formAction] = useFormState(fotgotPasswordAction, null);
-  console.log("🚀 ~ ForgotPasswordForm ~ state:", state);
 
   return (
     <form className="space-y-4 w-[80%]" action={formAction}>

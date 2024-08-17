@@ -1,18 +1,11 @@
 "use client";
 
 import { signUpAction } from "@/action/authAction";
-import { error } from "console";
 import Link from "next/link";
 import { useState } from "react";
 import { useFormState } from "react-dom";
 
-type SignInProps = {
-  searchParams: {
-    error: string;
-  };
-};
-
-export default function SignUpPage(props: SignInProps) {
+export default function SignUpPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [state, formAction] = useFormState(signUpAction, null);
@@ -28,6 +21,13 @@ export default function SignUpPage(props: SignInProps) {
           <>
             <h1 className="mb-8 text-3xl font-semibold text-center">Sign up</h1>
             <form className="space-y-4 w-[80%]" action={formAction}>
+            <div>
+                <label htmlFor="email" className="block text-sm">
+                  Email
+                </label>
+                <input type="text" id="email" name="email" className="w-full border rounded-md p-2" />
+                {state?.errors.email && <p className="mt-2 text-xs text-red-600">{state.errors.email}</p>}
+              </div>
               <div>
                 <label htmlFor="username" className="block text-sm">
                   Username

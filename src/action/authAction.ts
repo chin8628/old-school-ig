@@ -6,12 +6,14 @@ import { z } from "zod";
 
 export const signUpAction = async (_: Record<string, unknown> | null, f: FormData) => {
   const schema = z.object({
+    email: z.string(),
     username: z.string().max(100),
     password: z.string().min(8).max(100),
     confirmPassword: z.string(),
   });
 
   const validatedFields = schema.safeParse({
+    email: f.get("email"),
     username: f.get("username"),
     password: f.get("password"),
     confirmPassword: f.get("confirmPassword"),
@@ -32,7 +34,7 @@ export const signUpAction = async (_: Record<string, unknown> | null, f: FormDat
   }
 
   try {
-    await createUser(validatedFields.data.username, validatedFields.data.password);
+    await createUser(validatedFields.data.username, validatedFields.data.password, validatedFields.data.email);
   } catch (e) {
     console.error(e);
 

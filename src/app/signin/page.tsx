@@ -24,6 +24,9 @@ export default async function SignIn(props: SignInProps) {
         <div className="mt-4 text-sm text-center">
           <Link href="/signup">Create a new account?</Link>
         </div>
+        <div className="mt-4 text-sm text-center">
+          <Link href="/forgotpassword">Forgot password?</Link>
+        </div>
       </div>
     </div>
   );

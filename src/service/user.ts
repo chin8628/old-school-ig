@@ -3,7 +3,7 @@ import { hashPasswordWithSalt } from "@/service/auth";
 import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 
-export const createUser = async (username: string, password: string) => {
+export const createUser = async (username: string, password: string, email: string) => {
   const { hash, salt } = await hashPasswordWithSalt(password);
 
   try {
@@ -12,7 +12,7 @@ export const createUser = async (username: string, password: string) => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         publicUserId: randomUUID().toString(),
-        email: "",
+        email,
         username,
         password: hash,
         salt,
@@ -35,4 +35,25 @@ export const createUser = async (username: string, password: string) => {
 
     throw error;
   }
+};
+
+export const getUserByResetPasswordToken = async (token: string) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      resetPassword: {
+        some: {
+          token,
+          expireAt: {
+            gte: new Date().toISOString(),
+          },
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    throw new Error("Invalid token");
+  }
+
+  return user;
 };

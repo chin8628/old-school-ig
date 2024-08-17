@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --pretty --noEmit",
-    "prisma": "dotenv -e .env.local -- npx prisma"
+    "prisma": "dotenv -e .env.local -- npx prisma",
+    "prisma:prod": "dotenv -e .env.production -- npx prisma"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.1.0",
@@ -24,6 +25,7 @@
     "react-dom": "^18",
     "react-image-crop": "^11.0.5",
     "react-youtube": "^10.1.0",
+    "resend": "^3.5.0",
     "sanitize-html": "^2.13.0",
     "sharp": "0.32.6",
     "uuid": "^9.0.1",

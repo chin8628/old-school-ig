@@ -23,3 +23,16 @@ export const verifyPasswordToGetUser = async (username: string, password: string
 
   return user;
 };
+
+export const changePassword = async (username: string, password: string) => {
+  const { hash, salt } = await hashPasswordWithSalt(password);
+  await prisma.user.update({
+    where: {
+      username,
+    },
+    data: {
+      password: hash,
+      salt,
+    },
+  });
+};

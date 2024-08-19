@@ -1,17 +1,17 @@
-import { PhotoInfo } from "@/service/gallery/photos";
+import { MediaResponse, PostResponse } from "@/service/gallery/photos";
 import Image from "next/image";
 
-type PhotoItemProps = {
-  photo: PhotoInfo;
-  openModal: (photo: PhotoInfo) => void;
+type MediaItemProps = {
+  post: PostResponse;
+  openModal: (post: PostResponse) => void;
   priority: boolean;
 };
 
-export const PhotoItem: React.FC<PhotoItemProps> = (props) => {
+export const PostItem: React.FC<MediaItemProps> = (props) => {
   return (
-    <button onClick={() => props.openModal(props.photo)} className="w-full h-full max-w-300px max-h-300px relative">
+    <button onClick={() => props.openModal(props.post)} className="w-full h-full max-w-300px max-h-300px relative">
       <Image
-        src={props.photo.photoUrl}
+        src={props.post.media[0].mediaUrl}
         alt={`Photo`}
         width={0}
         height={0}

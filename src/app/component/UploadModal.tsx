@@ -27,7 +27,7 @@ const LoadingSpinner = () => (
 );
 
 type UploadModalProps = {
-  previewUrl: string;
+  previewUrls: string[];
   close: () => void;
   uploadCompleted: boolean;
   uploading: boolean;
@@ -45,7 +45,7 @@ export const UploadModal = (props: UploadModalProps) => {
           onClick={stopPropagation}
         >
           <Image
-            src={props.previewUrl}
+            src={props.previewUrls[0]}
             alt="Preview"
             width={0}
             height={0}

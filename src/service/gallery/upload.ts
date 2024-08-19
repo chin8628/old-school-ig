@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
-import ExifReader from "exifreader";
-import { uploadFileToMinio } from "../../repository/s3";
 import { prisma } from "@/repository/db";
+import { MediaType } from "@prisma/client";
+import ExifReader from "exifreader";
+import { uploadFiles } from "../../repository/s3";
 
 export type ExifData = {
   iso: string | null;
@@ -11,13 +11,13 @@ export type ExifData = {
   maker: string | null;
   model: string | null;
   lensModel: string | null;
-  createDate: string | null;
+  capturedAt: string | null;
   imageHeight: string | null;
   imageWidth: string | null;
 };
 
-const extractExif = (fileBuffer: Buffer): ExifData => {
-  const exif = ExifReader.load(fileBuffer);
+const extractExif = async (file: File): Promise<ExifData> => {
+  const exif = ExifReader.load(Buffer.from(await file.arrayBuffer()));
   return {
     iso: exif.ISOSpeedRatings?.description.toString() || null,
     shutterSpeed: exif.ShutterSpeedValue?.description || null,
@@ -26,71 +26,82 @@ const extractExif = (fileBuffer: Buffer): ExifData => {
     maker: exif.Make?.description || null,
     model: exif.Model?.description || null,
     lensModel: exif.LensModel?.description || null,
-    createDate: exif.CreateDate?.description || null,
+    capturedAt: exif.CreateDate?.description || null,
     imageHeight: exif["Image Height"]?.description || null,
     imageWidth: exif["Image Width"]?.description || null,
   };
 };
 
-export async function uploadPhoto(
+export const uploadPhoto = async (
   username: string,
   data: {
-    file: File;
-    story: string;
+    files: File[];
+    content: string;
     youtubeId?: string;
     startTime?: number;
     stopTime?: number;
   }
-): Promise<string> {
+): Promise<string[]> => {
   try {
-    const fileName = `${uuidv4()}.jpg`;
-    const fileBuffer = Buffer.from(await data.file.arrayBuffer());
-    const exif = extractExif(fileBuffer);
-
-    await uploadFileToMinio(fileBuffer, `/upload/photo/${fileName}`);
+    const filesWithName = await uploadFiles(data.files);
+    let photos = [];
+    for (const file of filesWithName) {
+      photos.push({
+        fileName: file.fileName,
+        exif: await extractExif(file.file),
+      });
+    }
     await savePhotoInfo(username, {
-      fileName,
-      exif,
-      story: data.story,
+      content: data.content,
       youtubeId: data.youtubeId,
       startTime: data.startTime,
       stopTime: data.stopTime,
+      photos,
     });
 
-    return fileName;
+    return filesWithName.map((file) => file.fileName);
   } catch (error) {
     console.error("Error uploading photo:", error);
     throw error;
   }
-}
+};
 
 export async function savePhotoInfo(
   username: string,
   data: {
-    fileName: string;
-    exif: ExifData;
-    story: string;
+    content: string;
     youtubeId?: string;
     startTime?: number;
     stopTime?: number;
+    photos: {
+      fileName: string;
+      exif: ExifData;
+    }[];
   }
 ): Promise<void> {
   try {
-    await prisma.photo.create({
+    await prisma.post.create({
       data: {
-        fileName: data.fileName,
-        story: data.story,
+        content: data.content,
         createdAt: new Date().toISOString(),
-        iso: data.exif.iso,
-        shutterSpeed: data.exif.shutterSpeed,
-        fNumber: data.exif.fNumber,
-        focalLength: data.exif.focalLength,
-        maker: data.exif.maker,
-        model: data.exif.model,
-        lensModel: data.exif.lensModel,
-        createDate: data.exif.createDate,
-        imageHeight: data.exif.imageHeight,
-        imageWidth: data.exif.imageWidth,
+        Media: {
+          createMany: {
+            data: data.photos.map((photo) => ({
+              fileName: photo.fileName,
+              iso: photo.exif.iso,
+              shutterSpeed: photo.exif.shutterSpeed,
+              fNumber: photo.exif.fNumber,
+              focalLength: photo.exif.focalLength,
+              maker: photo.exif.maker,
+              model: photo.exif.model,
+              lensModel: photo.exif.lensModel,
+              capturedAt: photo.exif.capturedAt,
+              imageHeight: photo.exif.imageHeight,
+              imageWidth: photo.exif.imageWidth,
+              type: MediaType.PHOTO,
+            })),
+          },
+        },
         vibeSong: data.youtubeId
           ? {
               create: {

@@ -1,7 +1,5 @@
 "use server";
 
-import { prisma } from "@/repository/db";
-import { deleteFileFromMinio } from "@/repository/s3";
 import { uploadPhoto } from "@/service/gallery/upload";
 import { getServerSession } from "next-auth";
 import sanitizeHtml from "sanitize-html";
@@ -14,7 +12,7 @@ const cleanStoryInput = (story: string) => {
   }).replace(/\n/g, "<br>");
 };
 
-export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: FormData) => {
+export const createPostAction = async (_: Record<string, unknown> | null, f: FormData) => {
   const session = await getServerSession();
   if (!session?.user?.name) {
     return {
@@ -28,10 +26,14 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
   const validateToHaveYoutubeId = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
 
   const schema = z.object({
-    photo: z
+    photos: z
       .any()
-      .refine((files) => ["image/jpeg", "image/jpg"].includes(files.type), ".jpg and .jpeg files are accepted."),
-    story: z.string().optional().default(""),
+      .refine((file) => ["image/jpeg", "image/jpg"].includes(file.type), {
+        message: "Only .jpg and .jpeg files are accepted.",
+      })
+      .array()
+      .max(10, "You can only upload up to 10 photos at a time."),
+    content: z.string().optional().default(""),
     youtubeLink: z
       .string()
       .optional()
@@ -51,23 +53,24 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
   });
 
   const validatedFields = schema.safeParse({
-    photo: f.get("photo"),
+    photos: f.getAll("photos"),
     story: f.get("story"),
     youtubeLink: f.get("youtubeLink"),
     startTime: f.get("startTime"),
     stopTime: f.get("stopTime"),
   });
+  console.log(`🚀 ~ createPostAction ~ f.getAll("photos"):`, f.getAll("photos"));
 
   if (!validatedFields.success) {
-    console.debug(validatedFields.error.flatten().fieldErrors);
+    console.error(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
 
   await uploadPhoto(session?.user?.name, {
-    file: validatedFields.data.photo,
-    story: cleanStoryInput(validatedFields.data.story),
+    files: validatedFields.data.photos as File[],
+    content: cleanStoryInput(validatedFields.data.content),
     youtubeId: validatedFields.data.youtubeLink?.match(validateToHaveYoutubeId)?.[1],
     startTime: (validatedFields.data.startTime && Number.parseInt(validatedFields.data.startTime, 10)) || undefined,
     stopTime: (validatedFields.data.stopTime && Number.parseInt(validatedFields.data.stopTime, 10)) || undefined,
@@ -76,40 +79,4 @@ export const uploadPhotoAction = async (_: Record<string, unknown> | null, f: Fo
   return {
     errors: {},
   };
-};
-
-// Should be moved to service
-export const deletePhotoAction = async (photoId: string) => {
-  const session = await getServerSession();
-  if (!session) {
-    console.error("User is not authenticated");
-    return;
-  }
-
-  try {
-    // Verify that the user owns the photo
-    const photo = await prisma.photo.findFirst({
-      where: {
-        id: Number.parseInt(photoId),
-        user: {
-          username: session.user?.name || "",
-        },
-      },
-    });
-
-    await prisma.photo.delete({
-      where: {
-        id: photo?.id || -1,
-      },
-    });
-
-    await deleteFileFromMinio(`/upload/photo/${photo?.fileName}` || "");
-  } catch (error) {
-    console.error("Error deleting photo", error);
-    return {
-      errors: {
-        photo: ["Could not delete photo"],
-      },
-    };
-  }
 };

@@ -1,7 +1,6 @@
-import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@/repository/db";
+import { deleteFiles, uploadFiles } from "@/repository/s3";
 import { Session } from "next-auth";
-import { deleteFileFromMinio, uploadFileToMinio } from "@/repository/s3";
 
 const AVATAR_PATH = "/upload/avatar";
 const AVATAR_BASE_URL = `${process.env.MINIO_PATH!}${AVATAR_PATH}`;
@@ -13,11 +12,9 @@ export type ProfileInfo = {
 };
 
 export const getProfileInfoByUsername = async (username: string): Promise<ProfileInfo | null> => {
-  const profile = await prisma.profile.findFirst({
+  const profile = await prisma.user.findFirst({
     where: {
-      user: {
-        username,
-      },
+      username,
     },
     select: {
       displayName: true,
@@ -51,36 +48,32 @@ export const updateProfileInfo = async (
     throw new Error("User is not authenticated");
   }
 
-  const profile = await prisma.profile.findFirstOrThrow({
+  const user = await prisma.user.findFirstOrThrow({
     where: {
-      user: {
-        username: session.user.name,
-      },
+      username: session.user.name,
     },
   });
 
   let fileName = null;
   if (newProfileInfo.avatar) {
-    const generatedFileName = `${uuidv4()}.jpg`;
-    const fileBuffer = Buffer.from(await newProfileInfo.avatar.arrayBuffer());
     try {
-      await uploadFileToMinio(fileBuffer, `${AVATAR_PATH}/${generatedFileName}`);
-      fileName = generatedFileName;
+      const files = await uploadFiles([newProfileInfo.avatar]);
+      fileName = files[0].fileName;
     } catch (e) {
       console.error("Failed to upload avatar", e);
       throw new Error("Failed to upload avatar");
     }
 
     try {
-      await deleteFileFromMinio(`${AVATAR_PATH}/${profile.avatarUrl}`);
+      await deleteFiles([`${AVATAR_PATH}/${user.avatarUrl}`]);
     } catch (error) {
       console.error("Cannot delete avatar", error);
     }
   }
 
-  const updatedProfile = await prisma.profile.update({
+  const updatedProfile = await prisma.user.update({
     where: {
-      id: profile.id,
+      id: user.id,
     },
     data: {
       displayName: newProfileInfo.displayName,
@@ -92,6 +85,6 @@ export const updateProfileInfo = async (
   return {
     displayName: updatedProfile.displayName,
     shortBio: updatedProfile.shortBio,
-    avatarUrl: profile.avatarUrl || "/images/avatar.jpg",
+    avatarUrl: user.avatarUrl || "/images/avatar.jpg",
   };
 };

@@ -1,6 +1,6 @@
 "use server";
 import { getProfileInfoByUsername } from "@/service/profile";
-import { getTotalNumberOfPhotos } from "@/service/gallery/photos";
+import { getTotalNumberOfPosts } from "@/service/gallery/photos";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -38,7 +38,7 @@ export const Profile = async (props: ProfileProps) => {
           {profile.shortBio.slice(0, 120)}
           {profile.shortBio.length > 120 && "..."}
         </p>
-        <p className="mt-1 text-xs text-gray-500">{await getTotalNumberOfPhotos(props.username)} photos</p>
+        <p className="mt-1 text-xs text-gray-500">{await getTotalNumberOfPosts(props.username)} photos</p>
       </div>
     </div>
   );

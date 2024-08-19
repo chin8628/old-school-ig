@@ -1,14 +1,14 @@
 "use client";
-import { deletePhotoAction } from "@/action/photoAction";
+import { deletePostAction } from "@/app/component/deletePostAction";
 import { ModalContainer } from "@/app/component/ModalContainer";
 import { SongPlayer } from "@/app/component/SongPlayer";
 
-import { PhotoInfo } from "@/service/gallery/photos";
+import { PostResponse } from "@/service/gallery/photos";
 import { ExifData } from "@/service/gallery/upload";
 import Image from "next/image";
 
-type PhotoModalProps = {
-  photo: PhotoInfo;
+type PostModalProps = {
+  post: PostResponse;
   close: () => void;
 };
 
@@ -30,9 +30,9 @@ const getShootingSettingsText = (exif: ExifData) =>
     .filter((item) => item !== "")
     .join(", ");
 
-export const PhotoModal = (props: PhotoModalProps) => {
+export const PostModal = (props: PostModalProps) => {
   const deletePhoto = async () => {
-    await deletePhotoAction(props.photo.id);
+    await deletePostAction(props.post.id);
     window.location.reload();
   };
 
@@ -44,7 +44,7 @@ export const PhotoModal = (props: PhotoModalProps) => {
           onClick={(e) => e.stopPropagation()}
         >
           <Image
-            src={props.photo.photoUrl}
+            src={props.post.media[0].mediaUrl}
             alt="Photo"
             width={0}
             height={0}
@@ -59,27 +59,27 @@ export const PhotoModal = (props: PhotoModalProps) => {
         >
           <div className="flex flex-row justify-between w-full">
             <p className="text-xs text-neutral-600">
-              {new Date(props.photo.createdAt).toLocaleString("en-US", {
+              {new Date(props.post.createdAt).toLocaleString("en-US", {
                 dateStyle: "medium",
                 timeStyle: "short",
                 hour12: false,
               })}
             </p>
-            {props.photo.vibeSong.youtubeId && (
+            {props.post.vibeSong.youtubeId && (
               <SongPlayer
-                youtubeId={props.photo.vibeSong.youtubeId}
-                startTime={props.photo.vibeSong.startTime}
-                endTime={props.photo.vibeSong.endTime}
+                youtubeId={props.post.vibeSong.youtubeId}
+                startTime={props.post.vibeSong.startTime}
+                endTime={props.post.vibeSong.endTime}
               />
             )}
           </div>
 
-          {props.photo.story ? (
+          {props.post.content ? (
             <div className="mt-3 flex-grow overflow-y-auto no-scrollbar">
               <p
                 className="text-sm text-neutral-600"
                 dangerouslySetInnerHTML={{
-                  __html: props.photo.story,
+                  __html: props.post.content,
                 }}
               />
             </div>
@@ -91,20 +91,20 @@ export const PhotoModal = (props: PhotoModalProps) => {
           <div className="h-px w-full my-4 bg-gray-300" />
 
           <div className="text-xs text-neutral-600">
-            <p>{getCameraModelTextIfExist(props.photo.exif.maker, props.photo.exif.model)}</p>
-            <p>{getLensModelTextIfExist(props.photo.exif.lensModel)}</p>
-            <p>{getShootingSettingsText(props.photo.exif)}</p>
+            <p>{getCameraModelTextIfExist(props.post.media[0].exif.maker, props.post.media[0].exif.model)}</p>
+            <p>{getLensModelTextIfExist(props.post.media[0].exif.lensModel)}</p>
+            <p>{getShootingSettingsText(props.post.media[0].exif)}</p>
           </div>
 
           <div className="mt-2 flex justify-between">
             <a
-              href={props.photo.nonNextJsPhotoUrl}
+              href={props.post.media[0].nonNextJsMediaUrl}
               target="_blank"
               className="items-center space-x-2 text-xs text-neutral-600"
             >
               <span>Original</span>
             </a>
-            {props.photo.permission.canDelete && (
+            {props.post.permission.canDelete && (
               <a href="#" className="items-center space-x-2 text-xs text-neutral-600" onClick={deletePhoto}>
                 Delete
               </a>

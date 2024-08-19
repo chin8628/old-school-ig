@@ -16,12 +16,8 @@ export const createUser = async (username: string, password: string, email: stri
         username,
         password: hash,
         salt,
-        profile: {
-          create: {
-            displayName: username,
-            shortBio: "",
-          },
-        },
+        displayName: username,
+        shortBio: "",
       },
     });
   } catch (error) {

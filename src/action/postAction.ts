@@ -59,7 +59,6 @@ export const createPostAction = async (_: Record<string, unknown> | null, f: For
     startTime: f.get("startTime"),
     stopTime: f.get("stopTime"),
   });
-  console.log(`🚀 ~ createPostAction ~ f.getAll("photos"):`, f.getAll("photos"));
 
   if (!validatedFields.success) {
     console.error(validatedFields.error.flatten().fieldErrors);

@@ -1,8 +1,8 @@
 "use client";
 import { LoadingSpinner } from "@/app/component/LoadingSpinner";
-import { PostItem } from "@/app/component/PhotoItem";
+import { PostItem } from "@/app/component/PostItem";
 import { PostModal } from "@/app/component/PostModal";
-import { PostResponse, getPhotoListWithPagination } from "@/service/gallery/photos";
+import { PostResponse, getPostListWithPagination } from "@/service/gallery/photos";
 import { useEffect, useRef, useState } from "react";
 
 type PhotoGridProps = {
@@ -21,7 +21,7 @@ export const PhotoGrid = (props: PhotoGridProps) => {
     if (reachedTheEnd.current) return;
 
     setLoading(true);
-    const newPosts = await getPhotoListWithPagination(props.username, page, 18);
+    const newPosts = await getPostListWithPagination(props.username, page, 18);
     reachedTheEnd.current = newPosts.length === 0;
     setPosts((prevPosts: PostResponse[]) => {
       const mergedPosts = new Map();

@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 const MINIO_PUBLIC_UPLOAD_PHOTO_PATH = "https://minio.cloudian.in.th/old-school-ig/upload/photo";
 
 export type MediaResponse = {
+  id: string;
   nonNextJsMediaUrl: string;
   mediaUrl: string;
   exif: ExifData;
@@ -27,7 +28,7 @@ export type PostResponse = {
   };
 };
 
-export const getPhotoListWithPagination = async (
+export const getPostListWithPagination = async (
   username: string,
   page: number,
   perPage: number
@@ -56,6 +57,7 @@ export const getPhotoListWithPagination = async (
       createdAt: post.createdAt.toISOString(),
       content: post.content,
       media: post.Media.map((media) => ({
+        id: media.id.toString(),
         nonNextJsMediaUrl: `${MINIO_PUBLIC_UPLOAD_PHOTO_PATH}/${media.fileName}`,
         mediaUrl: `${process.env.MINIO_PATH}/upload/photo/${media.fileName}`,
         capturedAt: media.createdAt?.toISOString() || "",

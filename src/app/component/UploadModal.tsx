@@ -1,6 +1,8 @@
 import { ModalContainer } from "@/app/component/ModalContainer";
 import Image from "next/image";
 import { CheckBadgeIcon, MusicalNoteIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 
 const LoadingSpinner = () => (
   <div className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-white bg-opacity-50 backdrop-blur-sm z-10">
@@ -34,24 +36,65 @@ type UploadModalProps = {
 };
 
 export const UploadModal = (props: UploadModalProps) => {
-  const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
+  const [shownImageIndex, setShownImageIndex] = useState(0);
   const disabledAllInputs = props.uploadCompleted || props.uploading;
 
   return (
     <ModalContainer close={props.close}>
       <div className="flex flex-col md:flex-row max-w-[2048px] items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto text-sm">
         <div
-          className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm p-2 md:p-8 bg-white"
-          onClick={stopPropagation}
+          className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm bg-white overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
         >
-          <Image
-            src={props.previewUrls[0]}
-            alt="Preview"
-            width={0}
-            height={0}
-            className="w-auto h-auto max-w-full max-h-full shadow-[0_0_60px_0_rgba(255,255,255,0.2)]"
-          />
+          <div
+            className="flex w-full h-full transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${shownImageIndex * 100}%)` }}
+          >
+            {props.previewUrls.map((previewUrl, index) => (
+              <div key={index} className="relative w-full h-full flex-shrink-0">
+                <Image
+                  src={previewUrl}
+                  alt="Photo"
+                  width={0}
+                  height={0}
+                  fill
+                  sizes="(max-width: 768px) 90vw, 1800px"
+                  className="object-contain p-2 md:p-8"
+                  quality={90}
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            {shownImageIndex > 0 && (
+              <ArrowLeftCircleIcon
+                className="absolute top-1/2 left-2 w-6 h-6 text-gray-200 cursor-pointer"
+                onClick={() => setShownImageIndex((prev) => prev - 1)}
+              />
+            )}
+            {shownImageIndex < props.previewUrls.length - 1 && (
+              <ArrowRightCircleIcon
+                className="absolute top-1/2 right-2 w-6 h-6 text-gray-200 cursor-pointer"
+                onClick={() => setShownImageIndex((prev) => prev + 1)}
+              />
+            )}
+            {props.previewUrls.length > 1 && (
+              <div className="absolute bottom-2 flex space-x-1">
+                {props.previewUrls.map((_, index) => (
+                  <div
+                    key={index}
+                    className={
+                      index === shownImageIndex
+                        ? `w-2 h-2 rounded-full bg-gray-600`
+                        : `w-2 h-2 rounded-full bg-gray-200`
+                    }
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
         <div className="flex flex-col w-full md:max-w-[300px]" onClick={(e) => e.stopPropagation()}>
           <div className="bg-white drop-shadow-sm mt-3 md:mt-0 md:ml-3 w-full md:max-h-[90%]">
             {props.uploading && <LoadingSpinner />}

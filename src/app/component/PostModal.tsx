@@ -2,10 +2,11 @@
 import { deletePostAction } from "@/app/component/deletePostAction";
 import { ModalContainer } from "@/app/component/ModalContainer";
 import { SongPlayer } from "@/app/component/SongPlayer";
-
+import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "@heroicons/react/24/solid";
 import { PostResponse } from "@/service/gallery/photos";
 import { ExifData } from "@/service/gallery/upload";
 import Image from "next/image";
+import { useState } from "react";
 
 type PostModalProps = {
   post: PostResponse;
@@ -31,6 +32,7 @@ const getShootingSettingsText = (exif: ExifData) =>
     .join(", ");
 
 export const PostModal = (props: PostModalProps) => {
+  const [shownImageIndex, setShownImageIndex] = useState(0);
   const deletePhoto = async () => {
     await deletePostAction(props.post.id);
     window.location.reload();
@@ -40,19 +42,58 @@ export const PostModal = (props: PostModalProps) => {
     <ModalContainer close={props.close}>
       <div className="flex flex-col md:flex-row max-w-[2048px] items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto">
         <div
-          className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm p-2 md:p-8 bg-white"
+          className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm bg-white overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
-          <Image
-            src={props.post.media[0].mediaUrl}
-            alt="Photo"
-            width={0}
-            height={0}
-            sizes="(max-width: 768px) 90vw, 1800px"
-            className="w-auto h-auto max-w-full max-h-full shadow-[0_0_60px_0_rgba(255,255,255,0.2)]"
-            quality={90}
-          />
+          <div
+            className="flex w-full h-full transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${shownImageIndex * 100}%)` }}
+          >
+            {props.post.media.map((media) => (
+              <div key={media.id} className="relative w-full h-full flex-shrink-0">
+                <Image
+                  src={media.mediaUrl}
+                  alt="Photo"
+                  width={0}
+                  height={0}
+                  fill
+                  sizes="(max-width: 768px) 90vw, 1800px"
+                  className="object-contain p-2 md:p-8"
+                  quality={90}
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            {shownImageIndex > 0 && (
+              <ArrowLeftCircleIcon
+                className="absolute top-1/2 left-2 w-6 h-6 text-gray-200 cursor-pointer"
+                onClick={() => setShownImageIndex((prev) => prev - 1)}
+              />
+            )}
+            {shownImageIndex < props.post.media.length - 1 && (
+              <ArrowRightCircleIcon
+                className="absolute top-1/2 right-2 w-6 h-6 text-gray-200 cursor-pointer"
+                onClick={() => setShownImageIndex((prev) => prev + 1)}
+              />
+            )}
+            {props.post.media.length > 1 && (
+              <div className="absolute bottom-2 flex space-x-1">
+                {props.post.media.map((media, index) => (
+                  <div
+                    key={media.id}
+                    className={
+                      index === shownImageIndex
+                        ? `w-2 h-2 rounded-full bg-gray-600`
+                        : `w-2 h-2 rounded-full bg-gray-200`
+                    }
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
         <div
           className="bg-white drop-shadow-sm p-4 mt-3 md:mt-0 md:ml-3 w-full h-full max-h-[50vh] md:max-w-[300px] md:aspect-[3/4] flex flex-col"
           onClick={(e) => e.stopPropagation()}
@@ -91,9 +132,14 @@ export const PostModal = (props: PostModalProps) => {
           <div className="h-px w-full my-4 bg-gray-300" />
 
           <div className="text-xs text-neutral-600">
-            <p>{getCameraModelTextIfExist(props.post.media[0].exif.maker, props.post.media[0].exif.model)}</p>
-            <p>{getLensModelTextIfExist(props.post.media[0].exif.lensModel)}</p>
-            <p>{getShootingSettingsText(props.post.media[0].exif)}</p>
+            <p>
+              {getCameraModelTextIfExist(
+                props.post.media[shownImageIndex].exif.maker,
+                props.post.media[shownImageIndex].exif.model
+              )}
+            </p>
+            <p>{getLensModelTextIfExist(props.post.media[shownImageIndex].exif.lensModel)}</p>
+            <p>{getShootingSettingsText(props.post.media[shownImageIndex].exif)}</p>
           </div>
 
           <div className="mt-2 flex justify-between">

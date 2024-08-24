@@ -1,6 +1,7 @@
 "use client";
 import { editProfileAction } from "@/action/profile";
 import { AvatarSelection } from "@/app/profile/edit/component/AvatarSelection";
+import { LogoutButton } from "@/app/profile/edit/component/LogoutButton";
 import { UpdateProfileButton } from "@/app/profile/edit/component/UpdateProfileButton";
 import { ProfileInfo } from "@/service/profile";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
@@ -74,6 +75,7 @@ export const ProfileSection = (props: ProfileSectionProps) => {
 
         <div className="space-y-2">
           <UpdateProfileButton />
+          <LogoutButton />
         </div>
       </form>
     </>

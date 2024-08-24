@@ -30,7 +30,7 @@ export const Profile = async (props: ProfileProps) => {
               className="p-3 py-1 bg-gray-100 text-xs text-neutral-800 hover:bg-gray-200 rounded no-underline"
               href="/profile/edit"
             >
-              Edit
+              Profile
             </Link>
           )}
         </div>

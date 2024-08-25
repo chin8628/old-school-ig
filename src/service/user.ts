@@ -3,6 +3,9 @@ import { hashPasswordWithSalt } from "@/service/auth";
 import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 
+export class EmailUniqueError extends Error {}
+export class UsernameUniqueError extends Error {}
+
 export const createUser = async (username: string, password: string, email: string) => {
   const { hash, salt } = await hashPasswordWithSalt(password);
 
@@ -25,7 +28,9 @@ export const createUser = async (username: string, password: string, email: stri
 
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
-        throw new Error("Username already exists");
+        const target = error.meta!.target as string;
+        if (target.includes("email")) throw new EmailUniqueError();
+        if (target.includes("username")) throw new UsernameUniqueError();
       }
     }
 

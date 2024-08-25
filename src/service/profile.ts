@@ -57,7 +57,7 @@ export const updateProfileInfo = async (
   let fileName = null;
   if (newProfileInfo.avatar) {
     try {
-      const files = await uploadFiles([newProfileInfo.avatar]);
+      const files = await uploadFiles("/upload/avatar/", [newProfileInfo.avatar]);
       fileName = files[0].fileName;
     } catch (e) {
       console.error("Failed to upload avatar", e);

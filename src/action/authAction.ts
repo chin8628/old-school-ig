@@ -1,16 +1,26 @@
 "use server";
 
-import { createUser } from "@/service/user";
+import { createUser, EmailUniqueError, UsernameUniqueError } from "@/service/user";
 import { signIn } from "next-auth/react";
 import { z } from "zod";
 
 export const signUpAction = async (_: Record<string, unknown> | null, f: FormData) => {
-  const schema = z.object({
-    email: z.string(),
-    username: z.string().max(100),
-    password: z.string().min(8).max(100),
-    confirmPassword: z.string(),
-  });
+  const schema = z
+    .object({
+      email: z.string().min(1).email(),
+      username: z.string().min(1).max(100),
+      password: z.string().min(8).max(100),
+      confirmPassword: z.string().min(8).max(100),
+    })
+    .superRefine((data, ctx) => {
+      if (data.password !== data.confirmPassword) {
+        ctx.addIssue({
+          code: "custom",
+          message: "The passwords did not match",
+          path: ["confirmPassword"],
+        });
+      }
+    });
 
   const validatedFields = schema.safeParse({
     email: f.get("email"),
@@ -25,23 +35,23 @@ export const signUpAction = async (_: Record<string, unknown> | null, f: FormDat
     };
   }
 
-  if (validatedFields.data.password !== validatedFields.data.confirmPassword) {
-    return {
-      errors: {
-        confirmPassword: ["Passwords do not match"],
-      },
-    };
-  }
-
   try {
     await createUser(validatedFields.data.username, validatedFields.data.password, validatedFields.data.email);
   } catch (e) {
     console.error(e);
 
-    if (e instanceof Error && e.message === "Username already exists") {
+    if (e instanceof UsernameUniqueError) {
       return {
         errors: {
           username: ["Username already exists"],
+        },
+      };
+    }
+
+    if (e instanceof EmailUniqueError) {
+      return {
+        errors: {
+          email: ["Email already exists"],
         },
       };
     }

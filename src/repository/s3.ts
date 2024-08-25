@@ -18,13 +18,12 @@ function initializeMinioClient(): Minio.Client {
   return minioClient;
 }
 
-export const uploadFiles = async (files: File[]): Promise<{ fileName: string; file: File }[]> => {
+export const uploadFiles = async (directoryPath: string, files: File[]): Promise<{ fileName: string; file: File }[]> => {
   const client = initializeMinioClient();
   const filesWithName = [];
   const promises = [];
 
   for (const file of files) {
-    const filePath = `/upload/photo/`;
     const fileName = `${randomUUID()}.jpg`;
     const fileBuffer = Buffer.from(await file.arrayBuffer());
 
@@ -35,7 +34,7 @@ export const uploadFiles = async (files: File[]): Promise<{ fileName: string; fi
     const promise = new Promise(async (resolve, reject) => {
       client.putObject(
         process.env.MINIO_BUCKET!,
-        `${filePath}${fileName}`,
+        `${directoryPath}${fileName}`,
         fileBuffer,
         fileBuffer.byteLength,
         metaData,

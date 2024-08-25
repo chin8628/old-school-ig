@@ -43,7 +43,7 @@ export const uploadPhoto = async (
   }
 ): Promise<string[]> => {
   try {
-    const filesWithName = await uploadFiles(data.files);
+    const filesWithName = await uploadFiles("/upload/photo/", data.files);
     let photos = [];
     for (const file of filesWithName) {
       photos.push({

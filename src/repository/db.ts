@@ -4,6 +4,7 @@ declare const globalThis: {
   prismaGlobal: PrismaClient;
 } & typeof global;
 
+console.debug("🚀 ~ globalThis.prismaGlobal:", globalThis.prismaGlobal)
 export const prisma = globalThis.prismaGlobal ?? new PrismaClient();
 
 export const runThenClose = async (queryFunc: Promise<any>) => {

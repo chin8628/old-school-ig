@@ -33,6 +33,7 @@ type UploadModalProps = {
   close: () => void;
   uploadCompleted: boolean;
   uploading: boolean;
+  isShown: boolean;
 };
 
 export const UploadModal = (props: UploadModalProps) => {
@@ -40,10 +41,10 @@ export const UploadModal = (props: UploadModalProps) => {
   const disabledAllInputs = props.uploadCompleted || props.uploading;
 
   return (
-    <ModalContainer close={props.close}>
+    <ModalContainer close={props.close} isShown={props.isShown} >
       <div className="flex flex-col md:flex-row max-w-[2048px] items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto text-sm">
         <div
-          className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm bg-white overflow-hidden"
+          className="flex flex-col w-full h-screen md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm bg-white overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           <div
@@ -120,7 +121,7 @@ export const UploadModal = (props: UploadModalProps) => {
               <textarea
                 className="p-4 w-full h-full outline-none resize-none appearance-none"
                 placeholder="What's a story behind it?"
-                name="story"
+                name="content"
                 autoFocus
                 disabled={disabledAllInputs}
               ></textarea>

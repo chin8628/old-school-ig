@@ -68,6 +68,7 @@ export const GridUploadButton = () => {
             uploading={isUploading}
             previewUrls={previewUrls || []}
             uploadCompleted={uploadCompleted}
+            isShown={previewUrls !== null}
           />
         )}
       </form>

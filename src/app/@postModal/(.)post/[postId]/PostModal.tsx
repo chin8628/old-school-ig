@@ -2,16 +2,12 @@
 import { deletePostAction } from "@/app/component/deletePostAction";
 import { ModalContainer } from "@/app/component/ModalContainer";
 import { SongPlayer } from "@/app/component/SongPlayer";
-import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "@heroicons/react/24/solid";
 import { PostResponse } from "@/service/gallery/photos";
 import { ExifData } from "@/service/gallery/upload";
+import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-type PostModalProps = {
-  post: PostResponse;
-  close: () => void;
-};
 
 const getIsoTextIfExist = (iso: string | null) => (iso ? `ISO ${iso}` : "");
 const getCameraModelTextIfExist = (maker: string | null, model: string | null) =>
@@ -31,18 +27,28 @@ const getShootingSettingsText = (exif: ExifData) =>
     .filter((item) => item !== "")
     .join(", ");
 
+type PostModalProps = {
+  post: PostResponse;
+};
+
 export const PostModal = (props: PostModalProps) => {
+  const router = useRouter();
   const [shownImageIndex, setShownImageIndex] = useState(0);
+
   const deletePhoto = async () => {
     await deletePostAction(props.post.id);
     window.location.reload();
   };
 
+  const close = () => {
+    router.back();
+  };
+
   return (
-    <ModalContainer close={props.close}>
-      <div className="flex flex-col md:flex-row max-w-[2048px] items-center justify-start md:justify-center py-10 p-4 md:py-4 w-screen h-screen overflow-y-auto">
+    <ModalContainer close={() => close()} isShown>
+      <div className="flex flex-col md:flex-row max-w-[2048px] items-center justify-start md:justify-center py-10 md:py-4 w-screen min:h-0 md:h-screen overflow-y-auto">
         <div
-          className="flex flex-col w-full h-fit md:w-[60%] md:h-[90%] relative items-center justify-center drop-shadow-sm bg-white overflow-hidden"
+          className="flex flex-col w-full h-screen md:w-[60%] md:h-[90%] relative items-center justify-center md:drop-shadow-sm bg-white overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           <div
@@ -95,7 +101,7 @@ export const PostModal = (props: PostModalProps) => {
         </div>
 
         <div
-          className="bg-white drop-shadow-sm p-4 mt-3 md:mt-0 md:ml-3 w-full h-full max-h-[50vh] md:max-w-[300px] md:aspect-[3/4] flex flex-col"
+          className="bg-white md:drop-shadow-sm p-4 md:ml-3 w-full h-full max-h-[50vh] md:max-w-[300px] md:aspect-[3/4] flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex flex-row justify-between w-full">

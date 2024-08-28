@@ -1,22 +1,19 @@
-import { useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 type PhotoModalProps = {
   close?: () => void;
+  isShown: boolean;
   children: React.ReactNode;
 };
 
 export const ModalContainer = (props: PhotoModalProps) => {
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, []);
+  if (!props.isShown) {
+    return null;
+  }
 
   return (
     <div
-      className="fixed flex-col inset-0 flex justify-center items-center bg-black bg-opacity-80 backdrop-blur-sm z-50"
+      className="fixed flex-col inset-0 flex justify-center items-center bg-gray-800 md:bg-opacity-80 backdrop-blur-sm z-50"
       onClick={(e) => {
         props.close?.();
         e.stopPropagation();

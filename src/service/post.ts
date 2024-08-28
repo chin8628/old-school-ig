@@ -1,7 +1,10 @@
 "use server";
 import { prisma } from "@/repository/db";
 import { deleteFiles } from "@/repository/s3";
+import { PostResponse } from "@/service/gallery/photos";
 import { getServerSession } from "next-auth";
+
+const MINIO_PUBLIC_UPLOAD_PHOTO_PATH = "https://minio.cloudian.in.th/old-school-ig/upload/photo";
 
 export const deletePost = async (postId: string) => {
   const session = await getServerSession();
@@ -43,8 +46,9 @@ export const deletePost = async (postId: string) => {
   }
 };
 
-export const getPost = async (postId: string) => {
-  const post = await prisma.post.findFirst({
+export const getPost = async (postId: string): Promise<PostResponse> => {
+  const session = await getServerSession();
+  const post = await prisma.post.findFirstOrThrow({
     include: {
       Media: true,
       vibeSong: true,
@@ -55,5 +59,35 @@ export const getPost = async (postId: string) => {
     },
   });
 
-  return post;
-}
+  return {
+    id: post.id.toString(),
+    createdAt: post.createdAt.toISOString(),
+    content: post.content,
+    media: post.Media.map((media) => ({
+      id: media.id.toString(),
+      nonNextJsMediaUrl: `${MINIO_PUBLIC_UPLOAD_PHOTO_PATH}/${media.fileName}`,
+      mediaUrl: `${process.env.MINIO_PATH}/upload/photo/${media.fileName}`,
+      capturedAt: media.createdAt?.toISOString() || "",
+      exif: {
+        iso: media.iso,
+        shutterSpeed: media.shutterSpeed,
+        fNumber: media.fNumber,
+        focalLength: media.focalLength,
+        maker: media.maker,
+        model: media.model,
+        lensModel: media.lensModel,
+        capturedAt: media.capturedAt?.toISOString() || "",
+        imageHeight: media.imageHeight,
+        imageWidth: media.imageWidth,
+      },
+    })),
+    vibeSong: {
+      youtubeId: post.vibeSong?.youtubeId ?? undefined,
+      startTime: post.vibeSong?.startTime?.toFixed() ?? undefined,
+      endTime: post.vibeSong?.endTime?.toFixed() ?? undefined,
+    },
+    permission: {
+      canDelete: session?.user?.name === post.user?.username,
+    },
+  };
+};

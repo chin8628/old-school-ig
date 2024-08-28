@@ -54,11 +54,12 @@ export const createPostAction = async (_: Record<string, unknown> | null, f: For
 
   const validatedFields = schema.safeParse({
     photos: f.getAll("photos"),
-    story: f.get("story"),
+    content: f.get("content"),
     youtubeLink: f.get("youtubeLink"),
     startTime: f.get("startTime"),
     stopTime: f.get("stopTime"),
   });
+  console.log("🚀 ~ createPostAction ~ validatedFields:", validatedFields)
 
   if (!validatedFields.success) {
     console.error(validatedFields.error.flatten().fieldErrors);

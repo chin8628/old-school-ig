@@ -13,7 +13,7 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  content String @default("")
+  content String @default("") @db.Text
 
   vibeSongId Int?
   vibeSong   VibeSong? @relation(fields: [vibeSongId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -40,7 +40,7 @@ model Media {
   maker        String?
   model        String?
   lensModel    String?
-  capturedAt DateTime?
+  capturedAt   DateTime?
   imageHeight  String?
   imageWidth   String?
   iso          String?

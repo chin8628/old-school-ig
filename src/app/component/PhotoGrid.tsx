@@ -1,7 +1,6 @@
 "use client";
 import { LoadingSpinner } from "@/app/component/LoadingSpinner";
 import { PostItem } from "@/app/component/PostItem";
-import { PostModal } from "@/app/component/PostModal";
 import { PostResponse, getPostListWithPagination } from "@/service/gallery/photos";
 import { useEffect, useRef, useState } from "react";
 
@@ -59,7 +58,6 @@ export const PhotoGrid = (props: PhotoGridProps) => {
           />
         ))}
       </div>
-      {!!selectedPost && <PostModal post={selectedPost} close={() => setSelectedPost(null)} />}
       {loading && (
         <div className="w-full flex flex-col items-center py-4">
           <LoadingSpinner />
